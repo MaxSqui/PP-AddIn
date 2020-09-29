@@ -26,6 +26,9 @@
         <li>
             <span class="ms-font-m ms-fontColor-neutralPrimary">Previous counts: {{countPrev}}</span>
         </li>
+        <li>
+            <span class="ms-font-m ms-fontColor-neutralPrimary">Last slide was: {{lastSlide}}</span>
+        </li>
     </ul>
     <br />
     <br />
@@ -34,8 +37,16 @@
         <span class="ms-Button-label">Run</span>
         <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--ChevronRight"></i></span>
     </div>
-    <button class="Button Button--primary" id="insert-image" (click)="changeColor()">
+    <button class="Button Button--primary" (click)="changeColor()">
         <span class="Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
         <span class="Button-label">Change color</span>
+    </button>
+    <button class="Button Button--primary" (click)="goToNextSlide()">
+        <span class="Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+        <span class="Button-label">Next slide</span>
+    </button>
+    <button class="Button Button--primary"(click)="goToPrevSlide()">
+        <span class="Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+        <span class="Button-label">Previous slide</span>
     </button>
 </main>

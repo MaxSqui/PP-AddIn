@@ -1,8 +1,10 @@
 import { Component } from "@angular/core";
+import { P } from "@angular/core/src/render3";
 // images references in the manifest
 import "../../../assets/icon-16.png";
 import "../../../assets/icon-32.png";
 import "../../../assets/icon-80.png";
+import pptxgen from "pptxgenjs";
 const template = require("./app.component.html");
 /* global console, Office, require */
 
@@ -14,35 +16,24 @@ export default class AppComponent {
   welcomeMessage = "Hi!";
   color : string;
 
-  countNext: number ;
-  countPrev: number ;
+  countNext: number = 0;
+  countPrev: number = 0;
 
-  currSlide:number;
+  goToNextSlide() {
+    var goToNext = Office.Index.Next;
 
-
-  async addEventHandlerToBinding() {
-    Office.context.document.addHandlerAsync(
-        Office.EventType.ActiveViewChanged, this.onBindingSlideChanged);
-  }
-
-async onBindingSlideChanged() {
-        var lastSlide;
-        if(this.currSlide!=Office.Index.Next-1){
-          lastSlide = this.currSlide;
-          this.currSlide = Office.Index.Next-1;
-        }
-        if(this.currSlide<lastSlide){
-          this.countPrev++;
-        }
-        else {
-          this.countNext++;
-        }
-        lastSlide=this.currSlide;
+    Office.context.document.goToByIdAsync(goToNext, Office.GoToType.Index);
+    this.countNext++;
 }
 
+goToPrevSlide() {
+  var goToPrev = Office.Index.Previous;
+
+  Office.context.document.goToByIdAsync(goToPrev, Office.GoToType.Index);
+  this.countPrev++;
+}
 
   async run() {
-    Office.EventType.ActiveViewChanged
     /**
      * Insert your PowerPoint code here
      */
