@@ -26,27 +26,31 @@
         <li>
             <span class="ms-font-m ms-fontColor-neutralPrimary">Previous counts: {{countPrev}}</span>
         </li>
-        <li>
-            <span class="ms-font-m ms-fontColor-neutralPrimary">Last slide was: {{lastSlide}}</span>
-        </li>
     </ul>
     <br />
     <br />
-    <p class="ms-font-l">Modify the source files, then click <b>Run</b>.</p>
-    <div role="button" class="ms-welcome__action ms-Button ms-Button--hero ms-u-slideUpIn20" (click)="addEventHandlerToBinding()">
-        <span class="ms-Button-label">Run</span>
-        <span class="ms-Button-icon"><i class="ms-Icon ms-Icon--ChevronRight"></i></span>
-    </div>
     <button class="Button Button--primary" (click)="changeColor()">
         <span class="Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
         <span class="Button-label">Change color</span>
     </button>
+
+    <button class="Button Button--primary" (click)="goToFirstSlide()">
+        <span class="Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+        <span class="Button-label">First slide</span>
+    </button>
+
     <button class="Button Button--primary" (click)="goToNextSlide()">
         <span class="Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
         <span class="Button-label">Next slide</span>
     </button>
+
     <button class="Button Button--primary"(click)="goToPrevSlide()">
         <span class="Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
         <span class="Button-label">Previous slide</span>
+    </button>
+
+    <button class="Button Button--primary" (click)="goToLastSlide()">
+        <span class="Button-icon"><i class="ms-Icon ms-Icon--plus"></i></span>
+        <span class="Button-label">Last slide</span>
     </button>
 </main>

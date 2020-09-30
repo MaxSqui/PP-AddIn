@@ -19,35 +19,30 @@ export default class AppComponent {
   countNext: number = 0;
   countPrev: number = 0;
 
-  goToNextSlide() {
+  async goToFirstSlide() {
+    var goToFirst = Office.Index.First;
+
+    Office.context.document.goToByIdAsync(goToFirst, Office.GoToType.Index);
+  }
+
+  async goToLastSlide() {
+    var goToLast = Office.Index.Last;
+
+    Office.context.document.goToByIdAsync(goToLast, Office.GoToType.Index);
+  }
+
+  async goToNextSlide() {
     var goToNext = Office.Index.Next;
 
     Office.context.document.goToByIdAsync(goToNext, Office.GoToType.Index);
     this.countNext++;
-}
+  }
 
-goToPrevSlide() {
-  var goToPrev = Office.Index.Previous;
+  async goToPrevSlide() {
+    var goToPrev = Office.Index.Previous;
 
-  Office.context.document.goToByIdAsync(goToPrev, Office.GoToType.Index);
-  this.countPrev++;
-}
-
-  async run() {
-    /**
-     * Insert your PowerPoint code here
-     */
-    Office.context.document.setSelectedDataAsync(
-      "Hello World!",
-      {
-        coercionType: Office.CoercionType.Text
-      },
-      result => {
-        if (result.status === Office.AsyncResultStatus.Failed) {
-          console.error(result.error.message);
-        }
-      }
-    );
+    Office.context.document.goToByIdAsync(goToPrev, Office.GoToType.Index);
+    this.countPrev++;
   }
 
   async changeColor(){
