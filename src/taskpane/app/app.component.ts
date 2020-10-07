@@ -14,14 +14,22 @@ const template = require("./app.component.html");
 })
 export default class AppComponent {
 
- async AddFile(){
+ async AddFile(input: HTMLInputElement) {
+  var file: File = input.files[0];
   var reader = new window.FileReader();
-  reader.onload = function (event) {
-    // strip off the metadata before the base64-encoded string
-    var startIndex = (event.target.result as string).indexOf("base64,");
-    var copyBase64 = (event.target.result as string).substr(startIndex + 7);
-    Office.context.document.setSelectedDataAsync(copyBase64);    
-  };
- }
-
+  reader.readAsDataURL(file);
+  reader.onload = () => {
+    var startIndex = (reader.result as string).indexOf("base64,");
+     var copyBase64 = (reader.result as string).substr(startIndex + 7);
+     Office.context.document.setSelectedDataAsync(copyBase64,
+      {
+       coercionType: Office.CoercionType.Text
+      },
+      function (asyncResult) {
+        if (String(asyncResult.status) == "failed") {
+            console.log('Error: ' + asyncResult.error.message);
+        }
+      });
+    };
+  } 
 }

@@ -5,10 +5,10 @@
     <h2 class="ms-font-xl ms-fontWeight-semilight ms-fontColor-neutralPrimary ms-u-slideUpIn20">Add-In! </h2>
     <br />
     <br />
-    <div class="form-group">
-        <label for="file">Choose File</label>
+    <button class="file-upload-button">
         <input type="file"
-               id="file"
-               (change)="AddFile()">
-    </div>
+        #fileInput
+        (change)="AddFile(fileInput)"
+        />
+    </button>
 </main>
