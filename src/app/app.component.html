@@ -1,0 +1,21 @@
+<header class="ms-welcome__header ms-bgColor-neutralLighter ms-u-fadeIn500">
+  <img
+    width="90"
+    height="90"
+    src="../../../assets/logo-filled.png"
+    alt="Contoso Task Pane Add-in"
+    title="Contoso Task Pane Add-in"
+  />
+</header>
+<main class="ms-welcome__main">
+  <h2
+    class="ms-font-xl ms-fontWeight-semilight ms-fontColor-neutralPrimary ms-u-slideUpIn20"
+  >
+    Add-In!
+  </h2>
+  <br />
+  <br />
+  <button class="file-upload-button">
+    <input type="file" #fileInput (change)="AddFile(fileInput)" />
+  </button>
+</main>
