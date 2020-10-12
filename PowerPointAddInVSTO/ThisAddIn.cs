@@ -77,7 +77,10 @@ namespace PowerPointAddInVSTO
             textBox.TextFrame.TextRange.InsertAfter("This text was added by using code.");
 
             string path = "C:/Users/maxbe/Downloads/Lil_Uzi_Vert-Baby_Pluto.mp3";
-            Sld.Shapes.AddMediaObject2(path,MsoTriState.msoTrue);
+            //add audio
+            PowerPoint.Shape audio = Sld.Shapes.AddMediaObject2(path,MsoTriState.msoTrue);
+            //add bookmark = duration-value (ms) & name
+            audio.MediaFormat.MediaBookmarks.Add(100000, "yeet");
         }
 
 
