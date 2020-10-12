@@ -153,6 +153,7 @@
     can be found.
   -->
   <ItemGroup>
+    <Compile Include="Extensions\SlideExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
