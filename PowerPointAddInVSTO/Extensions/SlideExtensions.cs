@@ -5,7 +5,7 @@ namespace PowerPointAddInVSTO.Extensions
 {
     public static class SlideExtensions
     {
-        public static IEnumerable<Shape> GetAnimatedObjects(this Slide slide)
+        public static IEnumerable<Shape> GetAnimatedShapes(this Slide slide)
         {
             foreach(Shape shape in slide.Shapes)
             {

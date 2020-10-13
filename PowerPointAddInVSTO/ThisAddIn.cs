@@ -78,9 +78,40 @@ namespace PowerPointAddInVSTO
 
             string path = "C:/Users/maxbe/Downloads/Lil_Uzi_Vert-Baby_Pluto.mp3";
             //add audio
-            PowerPoint.Shape audio = Sld.Shapes.AddMediaObject2(path,MsoTriState.msoTrue);
+            Shape audio = Sld.Shapes.AddMediaObject2(path, MsoTriState.msoTrue);
+
+            //add settings to the audio 
+            //TODO: find the way to set AfterPrevious to play automatically & cross slides
+            audio.AnimationSettings.PlaySettings.LoopUntilStopped = MsoTriState.msoTrue;
+            audio.AnimationSettings.PlaySettings.HideWhileNotPlaying = MsoTriState.msoTrue;
+            audio.AnimationSettings.Animate = MsoTriState.msoTrue;
+
             //add bookmark = duration-value (ms) & name
-            audio.MediaFormat.MediaBookmarks.Add(100000, "yeet");
+            Sequence audioSequence = Sld.TimeLine.InteractiveSequences.Add();
+            audio.AnimationSettings.PlaySettings.PlayOnEntry = MsoTriState.msoTrue;
+            audio.MediaFormat.MediaBookmarks.Add(5000, "yeet");
+
+            //creating new shape and bind with exist bookmark
+            Shape rectangle = Sld.Shapes.AddShape(MsoAutoShapeType.msoShapeRoundedRectangle, 200, 160, 100, 50);
+            Sequence objSequence = Sld.TimeLine.InteractiveSequences.Add(1);
+            objSequence.AddTriggerEffect(rectangle, MsoAnimEffect.msoAnimEffectZoom, MsoAnimTriggerType.msoAnimTriggerOnMediaBookmark, audio, "yeet");
+        }
+
+        //separate methods (WIP)
+
+        private void SetAudio(Slide Sld, string path)
+        {
+            Shape audio = Sld.Shapes.AddMediaObject2(path, MsoTriState.msoTrue);
+        }
+
+        private void SetBookMark(Shape audio, double durationTime, bool isSec, string bookMarkName)
+        {
+            const int fromSec = 1000;
+            const int fromMin = 60000;
+            if (isSec) durationTime = durationTime * fromSec;
+            else durationTime = durationTime * fromMin;
+
+            audio.MediaFormat.MediaBookmarks.Add((int)durationTime, bookMarkName);
         }
 
 
