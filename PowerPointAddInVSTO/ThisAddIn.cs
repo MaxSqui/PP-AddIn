@@ -80,20 +80,20 @@ namespace PowerPointAddInVSTO
             //add audio
             Shape audio = Sld.Shapes.AddMediaObject2(path, MsoTriState.msoTrue);
 
-            //add settings to the audio 
-            //TODO: find the way to set AfterPrevious to play automatically & cross slides
+            //add settings to the audio (automatic play)
+            Sld.TimeLine.MainSequence.AddEffect(audio, MsoAnimEffect.msoAnimEffectMediaPlay, MsoAnimateByLevel.msoAnimateLevelNone ,MsoAnimTriggerType.msoAnimTriggerWithPrevious);
+            audio.AnimationSettings.PlaySettings.PlayOnEntry = MsoTriState.msoTrue;
+            audio.AnimationSettings.Animate = MsoTriState.msoTrue;
             audio.AnimationSettings.PlaySettings.LoopUntilStopped = MsoTriState.msoTrue;
             audio.AnimationSettings.PlaySettings.HideWhileNotPlaying = MsoTriState.msoTrue;
-            audio.AnimationSettings.Animate = MsoTriState.msoTrue;
 
             //add bookmark = duration-value (ms) & name
             Sequence audioSequence = Sld.TimeLine.InteractiveSequences.Add();
-            audio.AnimationSettings.PlaySettings.PlayOnEntry = MsoTriState.msoTrue;
             audio.MediaFormat.MediaBookmarks.Add(5000, "yeet");
 
             //creating new shape and bind with exist bookmark
             Shape rectangle = Sld.Shapes.AddShape(MsoAutoShapeType.msoShapeRoundedRectangle, 200, 160, 100, 50);
-            Sequence objSequence = Sld.TimeLine.InteractiveSequences.Add(1);
+            Sequence objSequence = Sld.TimeLine.InteractiveSequences.Add();
             objSequence.AddTriggerEffect(rectangle, MsoAnimEffect.msoAnimEffectZoom, MsoAnimTriggerType.msoAnimTriggerOnMediaBookmark, audio, "yeet");
         }
 
@@ -102,6 +102,12 @@ namespace PowerPointAddInVSTO
         private void SetAudio(Slide Sld, string path)
         {
             Shape audio = Sld.Shapes.AddMediaObject2(path, MsoTriState.msoTrue);
+
+            Sld.TimeLine.MainSequence.AddEffect(audio, MsoAnimEffect.msoAnimEffectMediaPlay, MsoAnimateByLevel.msoAnimateLevelNone, MsoAnimTriggerType.msoAnimTriggerWithPrevious);
+            audio.AnimationSettings.PlaySettings.PlayOnEntry = MsoTriState.msoTrue;
+            audio.AnimationSettings.Animate = MsoTriState.msoTrue;
+            audio.AnimationSettings.PlaySettings.LoopUntilStopped = MsoTriState.msoTrue;
+            audio.AnimationSettings.PlaySettings.HideWhileNotPlaying = MsoTriState.msoTrue;
         }
 
         private void SetBookMark(Shape audio, double durationTime, bool isSec, string bookMarkName)
@@ -112,6 +118,12 @@ namespace PowerPointAddInVSTO
             else durationTime = durationTime * fromMin;
 
             audio.MediaFormat.MediaBookmarks.Add((int)durationTime, bookMarkName);
+        }
+
+        private void BindShapeToBookmark(Slide Sld, Shape shape, Shape audio, MediaBookmark bookmark)
+        {
+            Sequence objSequence = Sld.TimeLine.InteractiveSequences.Add();
+            objSequence.AddTriggerEffect(shape, MsoAnimEffect.msoAnimEffectZoom, MsoAnimTriggerType.msoAnimTriggerOnMediaBookmark, audio, bookmark.Name);
         }
 
 
