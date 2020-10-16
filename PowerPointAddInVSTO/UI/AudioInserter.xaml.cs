@@ -36,7 +36,7 @@ namespace PowerPointAddInVSTO.UI
         private void Browse(object sender, RoutedEventArgs e)
         {
             var addIn = Globals.ThisAddIn;
-            var currentSlide = (Slide)slidetrack.Items.CurrentItem;
+            var currentSlide = (Slide)slidetrack.CurrentItem;
 
             Microsoft.Win32.OpenFileDialog openFileDlg = new Microsoft.Win32.OpenFileDialog();
             if (openFileDlg.ShowDialog() == true)
