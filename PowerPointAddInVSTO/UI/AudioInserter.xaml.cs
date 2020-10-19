@@ -1,4 +1,5 @@
 ﻿using Microsoft.Office.Interop.PowerPoint;
+using PowerPointAddInVSTO.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -31,7 +32,7 @@ namespace PowerPointAddInVSTO.UI
             slidetrack.ItemsSource = addIn.GetSlides();
         }
 
-        public string FilePath { get; private set; }
+        public string FilePath { get; private set; } = "none";
 
         private void Browse(object sender, RoutedEventArgs e)
         {
@@ -41,8 +42,21 @@ namespace PowerPointAddInVSTO.UI
             Microsoft.Win32.OpenFileDialog openFileDlg = new Microsoft.Win32.OpenFileDialog();
             if (openFileDlg.ShowDialog() == true)
             {
-                this.FilePath = openFileDlg.FileName;
-                addIn.SetAudio(currentSlide, FilePath);
+                if (openFileDlg.FileName.EndsWith(".mp3") || openFileDlg.FileName.EndsWith(".wav"))
+                {
+                    string currentFullAudioName = openFileDlg.SafeFileName;
+                    int formatSep = currentFullAudioName.LastIndexOf(".");
+                    string currentAudioName = currentFullAudioName.Remove(formatSep);
+                    IEnumerable<string> mediaNames = addIn.Application.ActivePresentation.GetMediaNames();
+                    if (!mediaNames.Contains(currentAudioName))
+                    {
+                        FilePath = openFileDlg.FileName;
+                        addIn.SetAudio(currentSlide, FilePath);
+                        return;
+                    }
+                    else MessageBox.Show("This audio file has already in your presentation!");
+                }
+                else MessageBox.Show("Choose [.mp3] or [.wav] type of the file!");
             }
         }
 

@@ -58,9 +58,8 @@ namespace PowerPointAddInVSTO
         {
             var a = new AudioInserter();
             a.Show();
-            Shape textBox = Sld.Shapes.AddTextbox(
-               Office.MsoTextOrientation.msoTextOrientationHorizontal, 0, 0, 500, 50);
-            textBox.TextFrame.TextRange.InsertAfter("This text was added by using code.");
+
+            IEnumerable<string> x =Application.ActivePresentation.GetMediaNames();
 
             //string path = "C:/Users/maxbe/Downloads/Lil_Uzi_Vert-Baby_Pluto.mp3";
             ////add audio
@@ -87,8 +86,10 @@ namespace PowerPointAddInVSTO
 
         public void SetAudio(Slide Sld, string path)
         {
-            Shape audio = Sld.Shapes.AddMediaObject2(path, MsoTriState.msoTrue);
+            Shape existAudio = Sld.GetAudioShape();
+            if (existAudio != null) existAudio.Delete();
 
+            Shape audio = Sld.Shapes.AddMediaObject2(path, MsoTriState.msoTrue);
             Sld.TimeLine.MainSequence.AddEffect(audio, MsoAnimEffect.msoAnimEffectMediaPlay, MsoAnimateByLevel.msoAnimateLevelNone, MsoAnimTriggerType.msoAnimTriggerWithPrevious);
             audio.AnimationSettings.PlaySettings.PlayOnEntry = MsoTriState.msoTrue;
             audio.AnimationSettings.Animate = MsoTriState.msoTrue;

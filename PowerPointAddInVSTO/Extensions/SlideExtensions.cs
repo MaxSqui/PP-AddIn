@@ -15,5 +15,17 @@ namespace PowerPointAddInVSTO.Extensions
                 }
             }
         }
+
+        public static Shape GetAudioShape(this Slide slide)
+        {
+            foreach (Shape shape in slide.Shapes)
+            {
+                if (shape.Type == Microsoft.Office.Core.MsoShapeType.msoMedia)
+                {
+                    return shape;
+                }
+            }
+            return null;
+        }
     }
 }

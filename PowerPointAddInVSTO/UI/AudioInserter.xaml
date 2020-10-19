@@ -10,7 +10,8 @@
         <DataGrid x:Name="slidetrack"  AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray" RowBackground="LightGray" AlternatingRowBackground="White" CanUserResizeColumns="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Number" Binding="{Binding SlideNumber}" Width="80" IsReadOnly="True" />
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="80"  IsReadOnly="True"  />
+                <DataGridTextColumn Header="Path" Binding="{Binding Path=FilePath}" Width="150" IsReadOnly="True" />
+
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
