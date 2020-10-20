@@ -5,12 +5,12 @@
     x:Class="PowerPointAddInVSTO.UI.AudioInserter"
     Title="Tracks inserting" 
     Height="300" 
-    Width="300">
+    Width="415">
     <Grid>
-        <DataGrid x:Name="slidetrack"  AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray" RowBackground="LightGray" AlternatingRowBackground="White" CanUserResizeColumns="True">
+        <DataGrid x:Name="slidetrack" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray" RowBackground="LightGray" AlternatingRowBackground="White" CanUserResizeColumns="True">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Number" Binding="{Binding SlideNumber}" Width="80" IsReadOnly="True" />
-                <DataGridTextColumn Header="Path" Binding="{Binding Path=FilePath}" Width="150" IsReadOnly="True" />
+                <DataGridTextColumn Header="Slide" Binding="{Binding SlideNumber}" Width="35" IsReadOnly="True" />
+                <DataGridTextColumn Header="Path" Binding="{Binding Name}" Width="290" IsReadOnly="True" />
 
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>

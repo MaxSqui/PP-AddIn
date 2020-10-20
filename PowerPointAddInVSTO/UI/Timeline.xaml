@@ -1,0 +1,28 @@
+﻿<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:ui="clr-namespace:PowerPointAddInVSTO.UI"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" 
+    x:Class="PowerPointAddInVSTO.UI.Timeline"
+    Title="Objects timeline" 
+    Height="300" 
+    Width="400">
+    <Grid>
+        <DataGrid x:Name="timeline"  AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray" RowBackground="LightGray" AlternatingRowBackground="White" CanUserResizeColumns="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="20" IsReadOnly="True" />
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="80" IsReadOnly="True" />
+                <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="120" IsReadOnly="True" />
+                <DataGridTextColumn Header="Trigger" Binding="{Binding AnimationSettings.AdvanceMode}" Width="120" IsReadOnly="True" />
+                <DataGridTextColumn Header="Time" Binding="{Binding AnimationSettings.AdvanceTime}" Width="120" IsReadOnly="True" />
+                <DataGridComboBoxColumn x:Name="timeValue" Header="Sec/Min"  SelectedItemBinding="{Binding Path=country}" DisplayMemberPath="name"/>
+                <DataGridTemplateColumn Header="Duration">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

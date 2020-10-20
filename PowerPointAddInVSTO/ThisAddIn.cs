@@ -21,7 +21,7 @@ namespace PowerPointAddInVSTO
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
-
+            Application.Presentations.Open("C:/Users/maxbe/source/repos/PowerPointAddInVSTO/5197_Graca_JJ.pptx");
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
@@ -54,10 +54,18 @@ namespace PowerPointAddInVSTO
             }
             return slides;
         }
+
+        public IEnumerable<Shape> GetAnimateShapes()
+        {
+            return Application.ActivePresentation.GetAnimateShapes();
+        }
         private void Application_PresentationNewSlide1(Slide Sld)
         {
+            //Sld.TimeLine
             var a = new AudioInserter();
             a.Show();
+            var b = new Timeline();
+            b.Show();
 
             IEnumerable<string> x =Application.ActivePresentation.GetMediaNames();
 
@@ -88,7 +96,6 @@ namespace PowerPointAddInVSTO
         {
             Shape existAudio = Sld.GetAudioShape();
             if (existAudio != null) existAudio.Delete();
-
             Shape audio = Sld.Shapes.AddMediaObject2(path, MsoTriState.msoTrue);
             Sld.TimeLine.MainSequence.AddEffect(audio, MsoAnimEffect.msoAnimEffectMediaPlay, MsoAnimateByLevel.msoAnimateLevelNone, MsoAnimTriggerType.msoAnimTriggerWithPrevious);
             audio.AnimationSettings.PlaySettings.PlayOnEntry = MsoTriState.msoTrue;

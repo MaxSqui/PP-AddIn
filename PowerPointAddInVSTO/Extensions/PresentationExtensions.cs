@@ -22,5 +22,20 @@ namespace PowerPointAddInVSTO.Extensions
                 }
             }
         }
+
+        public static IEnumerable<Shape> GetAnimateShapes(this Presentation presentation)
+        {
+            foreach (Slide slide in presentation.Slides)
+            {
+                foreach (Shape shape in slide.Shapes)
+                {
+                    if (shape.AnimationSettings.Animate == Microsoft.Office.Core.MsoTriState.msoTrue &&
+                        shape.Type != Microsoft.Office.Core.MsoShapeType.msoMedia)
+                    {
+                        yield return shape;
+                    }
+                }
+            }
+        }
     }
 }
