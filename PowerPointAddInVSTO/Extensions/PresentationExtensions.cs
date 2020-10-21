@@ -37,5 +37,19 @@ namespace PowerPointAddInVSTO.Extensions
                 }
             }
         }
+
+        public static IEnumerable<Effect> GetEffects(this Presentation presentation)
+        {
+            foreach (Slide slide in presentation.Slides)
+            {
+                foreach (Effect effect in slide.TimeLine.MainSequence)
+                {
+                    if(effect.Shape.Type != Microsoft.Office.Core.MsoShapeType.msoMedia) 
+                    {
+                        yield return effect;
+                    }
+                }
+            }
+        }
     }
 }

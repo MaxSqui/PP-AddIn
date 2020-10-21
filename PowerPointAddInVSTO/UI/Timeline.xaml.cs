@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PowerPointAddInVSTO.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,7 +25,7 @@ namespace PowerPointAddInVSTO.UI
         {
             var addIn = Globals.ThisAddIn;
             InitializeComponent();
-            timeline.ItemsSource = addIn.GetAnimateShapes();
+            timeline.ItemsSource = addIn.Application.ActivePresentation.GetEffects();
         }
 
         private void Apply(object sender, RoutedEventArgs e) { }

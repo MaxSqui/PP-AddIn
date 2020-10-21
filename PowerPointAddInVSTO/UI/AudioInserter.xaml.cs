@@ -49,10 +49,12 @@ namespace PowerPointAddInVSTO.UI
                     int formatSep = currentFullAudioName.LastIndexOf(".");
                     string currentAudioName = currentFullAudioName.Remove(formatSep);
                     IEnumerable<string> mediaNames = addIn.Application.ActivePresentation.GetMediaNames();
-                    if (!mediaNames.Contains(currentAudioName))
+                    if (/*!mediaNames.Contains(currentAudioName)*/true)
                     {
                         FilePath = openFileDlg.FileName;
                         currentSlide.Name = FilePath;
+                        this.slidetrack.CommitEdit();
+                        this.slidetrack.CommitEdit();
                         slidetrack.Items.Refresh();
                         addIn.SetAudio(currentSlide, FilePath);
                         return;

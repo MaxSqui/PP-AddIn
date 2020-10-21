@@ -5,23 +5,26 @@
     x:Class="PowerPointAddInVSTO.UI.Timeline"
     Title="Objects timeline" 
     Height="300" 
-    Width="400">
+    Width="1600">
     <Grid>
-        <DataGrid x:Name="timeline"  AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray" RowBackground="LightGray" AlternatingRowBackground="White" CanUserResizeColumns="True">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="465*"/>
+            <ColumnDefinition Width="1127*"/>
+        </Grid.ColumnDefinitions>
+        <DataGrid x:Name="timeline"  AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray" RowBackground="LightGray" AlternatingRowBackground="White" CanUserResizeColumns="True" Grid.ColumnSpan="2">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Id" Binding="{Binding Id}" Width="20" IsReadOnly="True" />
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="80" IsReadOnly="True" />
-                <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="120" IsReadOnly="True" />
-                <DataGridTextColumn Header="Trigger" Binding="{Binding AnimationSettings.AdvanceMode}" Width="120" IsReadOnly="True" />
-                <DataGridTextColumn Header="Time" Binding="{Binding AnimationSettings.AdvanceTime}" Width="120" IsReadOnly="True" />
-                <DataGridComboBoxColumn x:Name="timeValue" Header="Sec/Min"  SelectedItemBinding="{Binding Path=country}" DisplayMemberPath="name"/>
-                <DataGridTemplateColumn Header="Duration">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <TextBox Text="{Binding DisplayName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="80"/>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Id" Binding="{Binding Shape.Id}" Width="20" IsReadOnly="True" />
+                <DataGridTextColumn Header="Display name" Binding="{Binding DisplayName}" Width="100" IsReadOnly="True" />
+                <DataGridTextColumn Header="Type" Binding="{Binding Shape.Type}" Width="120" IsReadOnly="True" />
+                <DataGridTextColumn Header="Trigger" Binding="{Binding Shape.AnimationSettings.AdvanceMode}" Width="120" IsReadOnly="True" />
+                <DataGridTextColumn Header="AdvanceTime(Shape)" Binding="{Binding Shape.AnimationSettings.AdvanceTime}" Width="120" IsReadOnly="True" />
+                <!--<DataGridTextColumn Header="TriggerDelayTime" Binding="{Binding Timing.TriggerDelayTime}" Width="120" IsReadOnly="True" />
+                <DataGridTextColumn Header="Timing by trigger shape" Binding="{Binding Timing.TriggerShape}" Width="120" IsReadOnly="True" />-->
+                <DataGridTextColumn Header="Timing type" Binding="{Binding Timing.TriggerType}" Width="120" IsReadOnly="True" />
+                <!--<DataGridTextColumn x:Name="Clicks" Header="Total clicks" Binding="{Binding Timing.TriggerType}" Width="120" IsReadOnly="True" />-->
+                <!--<DataGridTextColumn Header="Trigger" Binding="{Binding Behaviors.Timing.TriggerDelayTime}" Width="120" IsReadOnly="True" />
+                <DataGridTextColumn Header="Amount" Binding="{Binding EffectParameters.FontName}" Width="120" IsReadOnly="True" />-->
+
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
