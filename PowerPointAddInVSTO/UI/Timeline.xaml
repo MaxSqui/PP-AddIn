@@ -21,7 +21,7 @@
                 <!--<DataGridTextColumn Header="Timing by trigger shape" Binding="{Binding Timing.TriggerShape}" Width="120" IsReadOnly="True" />-->
                 <DataGridTextColumn Header="Timing" Binding="{Binding Timing.TriggerDelayTime}" Width="120" IsReadOnly="True" />
                 <DataGridTextColumn Header="Accelerate (%)" Binding="{Binding Timing.Accelerate}" Width="120" IsReadOnly="True" />
-                <DataGridTextColumn Header="Accelerate (%)" Binding="{Binding Parent.Count}" Width="120" IsReadOnly="True" />
+                <DataGridTextColumn Header="Total Clicks" Binding="{Binding Parent.Count}" Width="120" IsReadOnly="True" />
 
                 <!--<DataGridTextColumn Header="Timing type" Binding="{Binding Count}" Width="120" IsReadOnly="True" />-->
                 <!--<DataGridTextColumn x:Name="Clicks" Header="Total clicks" Binding="{Binding Timing.TriggerType}" Width="120" IsReadOnly="True" />-->
