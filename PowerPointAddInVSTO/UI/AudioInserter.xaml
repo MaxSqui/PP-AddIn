@@ -19,6 +19,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Time" Binding="{Binding SlideShowTransition.AdvanceTime}" Width="290" IsReadOnly="True" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

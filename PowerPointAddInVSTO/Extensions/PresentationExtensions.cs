@@ -44,7 +44,7 @@ namespace PowerPointAddInVSTO.Extensions
             {
                 foreach (Effect effect in slide.TimeLine.MainSequence)
                 {
-                    if(effect.Shape.Type != Microsoft.Office.Core.MsoShapeType.msoMedia) 
+                    if (effect.Shape.Type != Microsoft.Office.Core.MsoShapeType.msoMedia)
                     {
                         yield return effect;
                     }

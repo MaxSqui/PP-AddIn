@@ -49,7 +49,7 @@ namespace PowerPointAddInVSTO.UI
                     int formatSep = currentFullAudioName.LastIndexOf(".");
                     string currentAudioName = currentFullAudioName.Remove(formatSep);
                     IEnumerable<string> mediaNames = addIn.Application.ActivePresentation.GetMediaNames();
-                    if (/*!mediaNames.Contains(currentAudioName)*/true)
+                    if (!mediaNames.Contains(currentAudioName))
                     {
                         FilePath = openFileDlg.FileName;
                         currentSlide.Name = FilePath;
