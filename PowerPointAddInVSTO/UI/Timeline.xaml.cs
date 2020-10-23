@@ -1,4 +1,5 @@
-﻿using PowerPointAddInVSTO.Extensions;
+﻿using Microsoft.Office.Interop.PowerPoint;
+using PowerPointAddInVSTO.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,13 +22,23 @@ namespace PowerPointAddInVSTO.UI
     /// </summary>
     public partial class Timeline : Window
     {
+        ThisAddIn addIn = Globals.ThisAddIn;
         public Timeline()
         {
-            var addIn = Globals.ThisAddIn;
             InitializeComponent();
             timeline.ItemsSource = addIn.Application.ActivePresentation.GetEffects();
+            slideInfo.ItemsSource = addIn.GetSlides();
+
         }
 
-        private void Apply(object sender, RoutedEventArgs e) { }
+        private void slideInfo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (slideInfo.SelectedIndex != -1)
+            {
+                Slide row = (Slide)slideInfo.SelectedItem;
+                timeline.ItemsSource = addIn.Application.ActivePresentation.GetEffectsBySlide(row);
+                timeline.Items.Refresh();
+            }
+        }
     }
 }

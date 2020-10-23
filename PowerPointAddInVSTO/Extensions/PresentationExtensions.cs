@@ -38,6 +38,17 @@ namespace PowerPointAddInVSTO.Extensions
             }
         }
 
+        public static IEnumerable<Shape> GetShapeRanges(this Presentation presentation)
+        {
+            foreach (Slide slide in presentation.Slides)
+            {
+                foreach (Shape shapeRange in slide.Background)
+                {
+                    yield return shapeRange;
+                }
+            }
+        }
+
         public static IEnumerable<Effect> GetEffects(this Presentation presentation)
         {
             foreach (Slide slide in presentation.Slides)
@@ -48,6 +59,17 @@ namespace PowerPointAddInVSTO.Extensions
                     {
                         yield return effect;
                     }
+                }
+            }
+        }
+
+        public static IEnumerable<Effect> GetEffectsBySlide(this Presentation presentation, Slide slide)
+        {
+            foreach (Effect effect in slide.TimeLine.MainSequence)
+            {
+                if (effect.Shape.Type != Microsoft.Office.Core.MsoShapeType.msoMedia)
+                {
+                    yield return effect;
                 }
             }
         }

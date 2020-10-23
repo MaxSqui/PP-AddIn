@@ -5,29 +5,29 @@
     x:Class="PowerPointAddInVSTO.UI.Timeline"
     Title="Objects timeline" 
     Height="300" 
-    Width="800">
+    Width="1000">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="465*"/>
-            <ColumnDefinition Width="700*"/>
+            <ColumnDefinition Width="60*"/>
+            <ColumnDefinition Width="195*"/>
+            <ColumnDefinition Width="145*"/>
+            <ColumnDefinition Width="592*"/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="timeline"  AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray" RowBackground="LightGray" AlternatingRowBackground="White" CanUserResizeColumns="True" Grid.ColumnSpan="2">
+        <DataGrid x:Name="timeline"  AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray" RowBackground="LightGray" AlternatingRowBackground="White" CanUserResizeColumns="True" Grid.ColumnSpan="3" Grid.Column="1"  Margin="165,0,0,0">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Display name" Binding="{Binding DisplayName}" Width="100" IsReadOnly="True" />
                 <DataGridTextColumn Header="Slide Number" Binding="{Binding Parent.Parent.Parent.SlideNumber}" Width="90" IsReadOnly="True" />
                 <DataGridTextColumn Header="Type" Binding="{Binding Shape.Type}" Width="120" IsReadOnly="True" />
-                    <DataGridTextColumn Header="AdvanceTime(Shape)" Binding="{Binding Shape.AnimationSettings.AdvanceTime}" Width="120" IsReadOnly="True" />
+                <DataGridTextColumn Header="AdvanceTime(Shape)" Binding="{Binding Shape.AnimationSettings.AdvanceTime}" Width="120" IsReadOnly="True" />
                 <DataGridTextColumn Header="Duration" Binding="{Binding Timing.Duration}" Width="120" IsReadOnly="True" />
-                <!--<DataGridTextColumn Header="Timing by trigger shape" Binding="{Binding Timing.TriggerShape}" Width="120" IsReadOnly="True" />-->
                 <DataGridTextColumn Header="Timing" Binding="{Binding Timing.TriggerDelayTime}" Width="120" IsReadOnly="True" />
-                <DataGridTextColumn Header="Accelerate (%)" Binding="{Binding Timing.Accelerate}" Width="120" IsReadOnly="True" />
-                <DataGridTextColumn Header="Total Clicks" Binding="{Binding Parent.Count}" Width="120" IsReadOnly="True" />
-
-                <!--<DataGridTextColumn Header="Timing type" Binding="{Binding Count}" Width="120" IsReadOnly="True" />-->
-                <!--<DataGridTextColumn x:Name="Clicks" Header="Total clicks" Binding="{Binding Timing.TriggerType}" Width="120" IsReadOnly="True" />-->
-                <!--<DataGridTextColumn Header="Trigger" Binding="{Binding Behaviors.Timing.TriggerDelayTime}" Width="120" IsReadOnly="True" />
-                <DataGridTextColumn Header="Amount" Binding="{Binding EffectParameters.FontName}" Width="120" IsReadOnly="True" />-->
-
+            </DataGrid.Columns>
+        </DataGrid>
+        <DataGrid x:Name="slideInfo" Margin="0,0,30,0" Grid.ColumnSpan="2" SelectionChanged="slideInfo_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Slide" Binding="{Binding SlideNumber}" Width="35" IsReadOnly="True" />
+                <DataGridTextColumn Header="Total Clicks" Binding="{Binding TimeLine.MainSequence.Count}" Width="80" IsReadOnly="True" />
+                <DataGridTextColumn Header="Time" Binding="{Binding SlideShowTransition.AdvanceTime}" Width="90" IsReadOnly="True" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>
