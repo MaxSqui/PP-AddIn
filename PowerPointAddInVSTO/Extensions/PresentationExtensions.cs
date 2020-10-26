@@ -73,5 +73,13 @@ namespace PowerPointAddInVSTO.Extensions
                 }
             }
         }
+
+        public static IEnumerable<Microsoft.Office.Core.CustomXMLPart> GetCustomData(this Presentation presentation)
+        {
+            foreach(Microsoft.Office.Core.CustomXMLPart data in presentation.CustomerData)
+            {
+                yield return data;
+            }
+        }
     }
 }

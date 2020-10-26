@@ -26,19 +26,32 @@ namespace PowerPointAddInVSTO.UI
         public Timeline()
         {
             InitializeComponent();
-            timeline.ItemsSource = addIn.Application.ActivePresentation.GetEffects();
-            slideInfo.ItemsSource = addIn.GetSlides();
+            ShapesTimeline.ItemsSource = addIn.Application.ActivePresentation.GetEffects();
+            SlideInfo.ItemsSource = addIn.GetSlides();
 
         }
 
-        private void slideInfo_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void SlideInfo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (slideInfo.SelectedIndex != -1)
+            if (SlideInfo.SelectedIndex != -1)
             {
-                Slide row = (Slide)slideInfo.SelectedItem;
-                timeline.ItemsSource = addIn.Application.ActivePresentation.GetEffectsBySlide(row);
-                timeline.Items.Refresh();
+                Slide row = (Slide)SlideInfo.SelectedItem;
+                ShapesTimeline.ItemsSource = addIn.Application.ActivePresentation.GetEffectsBySlide(row);
+                ShapesTimeline.Items.Refresh();
             }
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            ShapesTimeline.ItemsSource = addIn.Application.ActivePresentation.GetEffects();
+            ShapesTimeline.Items.Refresh();
+
+        }
+
+        private void ShapesTimeline_LoadingRow(object sender, DataGridRowEventArgs e)
+        {
+            e.Row.Header = (e.Row.GetIndex()+1).ToString();
+        }
+
     }
 }

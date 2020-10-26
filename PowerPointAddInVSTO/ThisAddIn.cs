@@ -61,16 +61,14 @@ namespace PowerPointAddInVSTO
         }
         private void Application_PresentationNewSlide1(Slide Sld)
         {
-
+            int k = Application.ActivePresentation.CustomerData.Count;
         }
-
-        //separate methods (WIP)
 
         public void SetAudio(Slide Sld, string path)
         {
             Shape existAudio = Sld.GetAudioShape();
             if (existAudio != null) existAudio.Delete();
-            Shape audio = Sld.Shapes.AddMediaObject2(path, MsoTriState.msoTrue);
+            Shape audio = Sld.Shapes.AddMediaObject2(path, MsoTriState.msoTrue, MsoTriState.msoTrue, 750, 500);
             Effect audioEffect = Sld.TimeLine.MainSequence.AddEffect(audio, MsoAnimEffect.msoAnimEffectMediaPlay, MsoAnimateByLevel.msoAnimateLevelNone, MsoAnimTriggerType.msoAnimTriggerWithPrevious);
             audioEffect.MoveTo(1);
         }

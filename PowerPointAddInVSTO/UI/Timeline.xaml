@@ -5,7 +5,7 @@
     x:Class="PowerPointAddInVSTO.UI.Timeline"
     Title="Objects timeline" 
     Height="300" 
-    Width="1000">
+    Width="1000" ResizeMode="CanMinimize" >
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="60*"/>
@@ -13,7 +13,7 @@
             <ColumnDefinition Width="145*"/>
             <ColumnDefinition Width="592*"/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="timeline"  AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray" RowBackground="LightGray" AlternatingRowBackground="White" CanUserResizeColumns="True" Grid.ColumnSpan="3" Grid.Column="1"  Margin="165,0,0,0">
+        <DataGrid x:Name="ShapesTimeline" LoadingRow="ShapesTimeline_LoadingRow" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray" RowBackground="LightGray" AlternatingRowBackground="White" CanUserResizeColumns="True" Grid.ColumnSpan="3" Grid.Column="1"  Margin="165,0,0,0">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Display name" Binding="{Binding DisplayName}" Width="100" IsReadOnly="True" />
                 <DataGridTextColumn Header="Slide Number" Binding="{Binding Parent.Parent.Parent.SlideNumber}" Width="90" IsReadOnly="True" />
@@ -23,12 +23,13 @@
                 <DataGridTextColumn Header="Timing" Binding="{Binding Timing.TriggerDelayTime}" Width="120" IsReadOnly="True" />
             </DataGrid.Columns>
         </DataGrid>
-        <DataGrid x:Name="slideInfo" Margin="0,0,30,0" Grid.ColumnSpan="2" SelectionChanged="slideInfo_SelectionChanged">
+        <DataGrid x:Name="SlideInfo" Margin="0,0,30,0" Grid.ColumnSpan="2" SelectionChanged="SlideInfo_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Slide" Binding="{Binding SlideNumber}" Width="35" IsReadOnly="True" />
                 <DataGridTextColumn Header="Total Clicks" Binding="{Binding TimeLine.MainSequence.Count}" Width="80" IsReadOnly="True" />
-                <DataGridTextColumn Header="Time" Binding="{Binding SlideShowTransition.AdvanceTime}" Width="90" IsReadOnly="True" />
+                <DataGridTextColumn Header="Time" Binding="{Binding SlideShowTransition.AdvanceTime}" Width="90" />
             </DataGrid.Columns>
         </DataGrid>
+        <Button Margin="510,0,22,236" Grid.Column="3" Click="Button_Click">Show all</Button>
     </Grid>
 </Window>
