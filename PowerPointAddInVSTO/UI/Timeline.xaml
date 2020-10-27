@@ -5,7 +5,7 @@
     x:Class="PowerPointAddInVSTO.UI.Timeline"
     Title="Objects timeline" 
     Height="300" 
-    Width="1000" ResizeMode="CanMinimize" >
+    Width="1093" ResizeMode="CanMinimize" >
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="60*"/>
@@ -19,8 +19,26 @@
                 <DataGridTextColumn Header="Slide Number" Binding="{Binding Parent.Parent.Parent.SlideNumber}" Width="90" IsReadOnly="True" />
                 <DataGridTextColumn Header="Type" Binding="{Binding Shape.Type}" Width="120" IsReadOnly="True" />
                 <DataGridTextColumn Header="AdvanceTime(Shape)" Binding="{Binding Shape.AnimationSettings.AdvanceTime}" Width="120" IsReadOnly="True" />
-                <DataGridTextColumn Header="Duration" Binding="{Binding Timing.Duration}" Width="120" IsReadOnly="True" />
-                <DataGridTextColumn Header="Timing" Binding="{Binding Timing.TriggerDelayTime}" Width="120" IsReadOnly="True" />
+                <DataGridTemplateColumn Header="Time" Width="*" x:Name="delay">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:Name="DelayTemplate">
+                            <TextBlock x:Name="ActionText">
+                                <TextBox Width="100" TextChanged="TextBox_TextChanged"></TextBox>
+                            </TextBlock>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Measure" Width="*" x:Name="measure">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate x:Name="measureTemplate">
+                            <ComboBox x:Name="ActionCombo" IsReadOnly="True" IsEditable="True" Text="Select measure" SelectionChanged="ActionCombo_SelectionChanged">
+                                <ComboBoxItem>Seconds</ComboBoxItem>
+                                <ComboBoxItem>Minutes</ComboBoxItem>
+                            </ComboBox>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
         <DataGrid x:Name="SlideInfo" Margin="0,0,30,0" Grid.ColumnSpan="2" SelectionChanged="SlideInfo_SelectionChanged">
@@ -28,8 +46,9 @@
                 <DataGridTextColumn Header="Slide" Binding="{Binding SlideNumber}" Width="35" IsReadOnly="True" />
                 <DataGridTextColumn Header="Total Clicks" Binding="{Binding TimeLine.MainSequence.Count}" Width="80" IsReadOnly="True" />
                 <DataGridTextColumn Header="Time" Binding="{Binding SlideShowTransition.AdvanceTime}" Width="90" />
+                
             </DataGrid.Columns>
         </DataGrid>
-        <Button Margin="510,0,22,236" Grid.Column="3" Click="Button_Click">Show all</Button>
+        <Button Margin="576.326,0,-0.326,236" Grid.Column="3" Click="Button_Click">Show all</Button>
     </Grid>
 </Window>

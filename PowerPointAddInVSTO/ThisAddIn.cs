@@ -73,7 +73,7 @@ namespace PowerPointAddInVSTO
             audioEffect.MoveTo(1);
         }
 
-        private void SetBookMark(Shape audio, double durationTime, bool isSec, string bookMarkName)
+        public void SetBookMark(Shape audio, float durationTime, bool isSec, string bookMarkName="-")
         {
             const int fromSec = 1000;
             const int fromMin = 60000;
@@ -83,7 +83,7 @@ namespace PowerPointAddInVSTO
             audio.MediaFormat.MediaBookmarks.Add((int)durationTime, bookMarkName);
         }
 
-        private void TriggerShapeToBookmark(Slide Sld, Shape shape, Shape audio, MediaBookmark bookmark)
+        public void TriggerShapeToBookmark(Slide Sld, Shape shape, Shape audio, MediaBookmark bookmark)
         {
             Sequence objSequence = Sld.TimeLine.InteractiveSequences.Add();
             objSequence.AddTriggerEffect(shape, MsoAnimEffect.msoAnimEffectZoom, MsoAnimTriggerType.msoAnimTriggerOnMediaBookmark, audio, bookmark.Name);
