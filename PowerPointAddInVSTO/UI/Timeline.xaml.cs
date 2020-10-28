@@ -58,26 +58,68 @@ namespace PowerPointAddInVSTO.UI
         private void ActionCombo_SelectionChanged(object sender, SelectionChangedEventArgs e) 
         {
             ComboBox comboBox = (ComboBox)sender;
-            //bool isSec = bool.Parse(comboBox.SelectedIndex.ToString());
             Effect effect = (Effect)ShapesTimeline.SelectedItem;
-            float value = effect.Timing.TriggerDelayTime;
-            Slide sld = effect.Shape.Parent as Slide;
-            Shape audio = sld.GetAudioShape();
-            MsoShapeType t = audio.Type;
-            if (audio.MediaFormat == null)
-            {
-
-            }
-            addIn.SetBookMark(sld.GetAudioShape(), effect.Timing.TriggerDelayTime, true);
-
+            effect.Paragraph = comboBox.SelectedIndex;
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            TextBox valueBox = (TextBox)sender;
-            float value = float.Parse(valueBox.Text);
             Effect currentEffect = (Effect)ShapesTimeline.SelectedItem;
-            currentEffect.Timing.TriggerDelayTime = value;
+            var shape = currentEffect.Shape;
+            TextBox valueBox = (TextBox)sender;
+            currentEffect.Timing.TriggerDelayTime = 0;
+            float value;
+            if (!float.TryParse(valueBox.Text, out value) && value > 0 && value < 65000)
+            {
+                //TODO: create valication
+            }
+            else currentEffect.Timing.TriggerDelayTime = value;
+
         }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            Effect effect = (Effect)ShapesTimeline.SelectedItem;
+            Shape shape = effect.Shape;
+            Slide sld = effect.Shape.Parent as Slide;
+            string bookmarkName = effect.Index.ToString();
+            Shape audio = sld.GetAudioShape();
+            if (audio == null)
+            {
+                AudioInserter audioInserter = new AudioInserter();
+                audioInserter.Show();
+                MessageBox.Show("This slide do not contain an audio file. Please insert audio in open window");
+                return;
+            }
+            MediaBookmark currentBookmark = audio.MediaFormat.MediaBookmarks.GetBookmark(bookmarkName);
+            if (currentBookmark != null) currentBookmark.Delete();
+
+            float time = effect.Timing.TriggerDelayTime;
+            bool isMin;
+            try
+            {
+                isMin = Convert.ToBoolean(effect.Paragraph);
+            }
+            catch
+            {
+                return;
+            }
+
+            MediaBookmark newBookmark = addIn.SetBookMark(sld.GetAudioShape(), time, isMin, bookmarkName);
+            if (newBookmark == null)
+            {
+                MessageBox.Show("Input timing is out of the current timing audio");
+                return;
+            }
+            sld.RemoveAnimationTrigger(shape);
+            sld.TimeLine.InteractiveSequences
+                .Add()
+                .AddTriggerEffect(shape, effect.EffectType, MsoAnimTriggerType.msoAnimTriggerOnMediaBookmark, audio, newBookmark.Name);
+
+            ShapesTimeline.CommitEdit();
+            ShapesTimeline.CommitEdit();
+            ShapesTimeline.Items.Refresh();
+        }
+
     }
 }

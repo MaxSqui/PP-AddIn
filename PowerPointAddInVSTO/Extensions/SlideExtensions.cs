@@ -5,17 +5,6 @@ namespace PowerPointAddInVSTO.Extensions
 {
     public static class SlideExtensions
     {
-        public static IEnumerable<Shape> GetAnimatedShapes(this Slide slide)
-        {
-            foreach(Shape shape in slide.Shapes)
-            {
-                if(shape.AnimationSettings.Animate == Microsoft.Office.Core.MsoTriState.msoTrue)
-                {
-                    yield return shape;
-                }
-            }
-        }
-
         public static Shape GetAudioShape(this Slide slide)
         {
             foreach (Shape shape in slide.Shapes)
@@ -26,6 +15,21 @@ namespace PowerPointAddInVSTO.Extensions
                 }
             }
             return null;
+        }
+
+        public static void RemoveAnimationTrigger(this Slide slide, Shape shape)
+        {
+            foreach(Sequence sequence in slide.TimeLine.InteractiveSequences)
+            {
+                foreach (Effect effect in sequence)
+                {
+                    if(effect.Shape == shape)
+                    {
+                        effect.Delete();
+                    }
+                }
+            }
+
         }
     }
 }

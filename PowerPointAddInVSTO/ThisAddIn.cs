@@ -71,16 +71,22 @@ namespace PowerPointAddInVSTO
             Shape audio = Sld.Shapes.AddMediaObject2(path, MsoTriState.msoTrue, MsoTriState.msoTrue, 750, 500);
             Effect audioEffect = Sld.TimeLine.MainSequence.AddEffect(audio, MsoAnimEffect.msoAnimEffectMediaPlay, MsoAnimateByLevel.msoAnimateLevelNone, MsoAnimTriggerType.msoAnimTriggerWithPrevious);
             audioEffect.MoveTo(1);
+            Sld.RemoveAnimationTrigger(audio);
         }
 
-        public void SetBookMark(Shape audio, float durationTime, bool isSec, string bookMarkName="-")
+        public MediaBookmark SetBookMark(Shape audio, float durationTime, bool isMin, string bookMarkName)
         {
             const int fromSec = 1000;
             const int fromMin = 60000;
-            if (isSec) durationTime = durationTime * fromSec;
-            else durationTime = durationTime * fromMin;
+            if (isMin) durationTime = durationTime * fromMin;
+            else durationTime = durationTime * fromSec;
+            if (durationTime < audio.MediaFormat.Length && durationTime>0)
+            {
+                MediaBookmark newBookmark = audio.MediaFormat.MediaBookmarks.Add((int)durationTime, bookMarkName);
+                return newBookmark;
+            }
+            return null;
 
-            audio.MediaFormat.MediaBookmarks.Add((int)durationTime, bookMarkName);
         }
 
         public void TriggerShapeToBookmark(Slide Sld, Shape shape, Shape audio, MediaBookmark bookmark)

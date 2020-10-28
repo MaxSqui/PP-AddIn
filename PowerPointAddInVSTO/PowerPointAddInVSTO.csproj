@@ -158,6 +158,7 @@
   -->
   <ItemGroup>
     <Compile Include="Extensions\PresentationExtensions.cs" />
+    <Compile Include="Extensions\ShapeExtensions.cs" />
     <Compile Include="Extensions\SlideExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

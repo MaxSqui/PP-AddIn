@@ -38,17 +38,6 @@ namespace PowerPointAddInVSTO.Extensions
             }
         }
 
-        public static IEnumerable<Shape> GetShapeRanges(this Presentation presentation)
-        {
-            foreach (Slide slide in presentation.Slides)
-            {
-                foreach (Shape shapeRange in slide.Background)
-                {
-                    yield return shapeRange;
-                }
-            }
-        }
-
         public static IEnumerable<Effect> GetEffects(this Presentation presentation)
         {
             foreach (Slide slide in presentation.Slides)
@@ -71,14 +60,6 @@ namespace PowerPointAddInVSTO.Extensions
                 {
                     yield return effect;
                 }
-            }
-        }
-
-        public static IEnumerable<Microsoft.Office.Core.CustomXMLPart> GetCustomData(this Presentation presentation)
-        {
-            foreach(Microsoft.Office.Core.CustomXMLPart data in presentation.CustomerData)
-            {
-                yield return data;
             }
         }
     }
