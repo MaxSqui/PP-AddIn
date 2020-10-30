@@ -1,21 +1,10 @@
 ﻿using Microsoft.Office.Core;
 using Microsoft.Office.Interop.PowerPoint;
 using PowerPointAddInVSTO.Extensions;
-using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Shape = Microsoft.Office.Interop.PowerPoint.Shape;
 
 namespace PowerPointAddInVSTO.UI
@@ -58,32 +47,57 @@ namespace PowerPointAddInVSTO.UI
         private void ActionCombo_SelectionChanged(object sender, SelectionChangedEventArgs e) 
         {
             ComboBox comboBox = (ComboBox)sender;
-            Effect effect = (Effect)ShapesTimeline.SelectedItem;
-            effect.Paragraph = comboBox.SelectedIndex;
         }
 
         private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            Effect currentEffect = (Effect)ShapesTimeline.SelectedItem;
-            var shape = currentEffect.Shape;
+            Effect effect = (Effect)ShapesTimeline.SelectedItem;
+            var Shape = effect.Shape;
+            Slide sld = effect.Shape.Parent as Slide;
+            IEnumerable<Effect> dependentEffects = sld.TimeLine.MainSequence.GetDependentEffects(effect);
             TextBox valueBox = (TextBox)sender;
-            currentEffect.Timing.TriggerDelayTime = 0;
+            effect.Timing.TriggerDelayTime = 0;
             float value;
             if (!float.TryParse(valueBox.Text, out value) && value > 0 && value < 65000)
             {
                 //TODO: create valication
             }
-            else currentEffect.Timing.TriggerDelayTime = value;
+            else effect.Timing.TriggerDelayTime = value;
 
+
+
+            foreach (Effect dependentEffect in dependentEffects)
+            {
+                dependentEffect.Timing.TriggerDelayTime = dependentEffect.Timing.TriggerDelayTime + value;
+            }
+
+
+
+            List<float> tags = sld.GetTags().ToList();
+            List<Effect> effects = addIn.Application.ActivePresentation.GetEffects().ToList();
+            int k = effects.IndexOf(effect);
+            tags[k] = value - tags[k];
+            sld.Tags.Delete("HST_TIMELINE");
+            sld.Tags.Add("HST_TIMELINE", sld.ConvertToString(tags));
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             Effect effect = (Effect)ShapesTimeline.SelectedItem;
+            var effectType = effect.EffectType;
             Shape shape = effect.Shape;
             Slide sld = effect.Shape.Parent as Slide;
+            List <float> tags = sld.GetTags().ToList();
+            List<Effect> effects = addIn.Application.ActivePresentation.GetEffects().ToList();
+            int k = effects.IndexOf(effect);
+
             string bookmarkName = effect.Index.ToString();
             Shape audio = sld.GetAudioShape();
+            //IEnumerable<Effect> dependentEffects = sld.GetDependentEffects(effect);
+
+            IEnumerable<Effect> dependentEffects = sld.TimeLine.MainSequence.GetDependentEffects(effect);
+
+
             if (audio == null)
             {
                 AudioInserter audioInserter = new AudioInserter();
@@ -95,27 +109,53 @@ namespace PowerPointAddInVSTO.UI
             if (currentBookmark != null) currentBookmark.Delete();
 
             float time = effect.Timing.TriggerDelayTime;
-            bool isMin;
-            try
-            {
-                isMin = Convert.ToBoolean(effect.Paragraph);
-            }
-            catch
-            {
-                return;
-            }
-
-            MediaBookmark newBookmark = addIn.SetBookMark(sld.GetAudioShape(), time, isMin, bookmarkName);
+            tags[k] = time;
+            sld.Tags.Delete("HST_TIMELINE");
+            sld.Tags.Add("HST_TIMELINE", sld.ConvertToString(tags));
+            MediaBookmark newBookmark = addIn.SetBookMark(sld.GetAudioShape(), time, false, bookmarkName);
             if (newBookmark == null)
             {
                 MessageBox.Show("Input timing is out of the current timing audio");
                 return;
             }
             sld.RemoveAnimationTrigger(shape);
-            sld.TimeLine.InteractiveSequences
-                .Add()
-                .AddTriggerEffect(shape, effect.EffectType, MsoAnimTriggerType.msoAnimTriggerOnMediaBookmark, audio, newBookmark.Name);
+            //Effect f = sld.TimeLine.InteractiveSequences
+            //    .Add()
+            Effect newEffect = sld.TimeLine.MainSequence.AddEffect(shape, effectType, effect.EffectInformation.BuildByLevelEffect, effect.Timing.TriggerType);
+            newEffect.MoveAfter(effect);
+            newEffect.Exit = effect.Exit;
+            if (shape.Type == MsoShapeType.msoPlaceholder)
+            {
+                try
+                {
+                    newEffect.Paragraph = effect.Paragraph;
+                }
+                catch
+                {
 
+                }
+            }
+
+            effect.Delete();
+            //    .AddTriggerEffect(shape, effectType, MsoAnimTriggerType.msoAnimTriggerOnMediaBookmark, audio, newBookmark.Name);
+            foreach (Effect dependentEffect in dependentEffects)
+            {
+                var newDependentEffect = sld.TimeLine.MainSequence.AddEffect(dependentEffect.Shape, dependentEffect.EffectType, dependentEffect.EffectInformation.BuildByLevelEffect, dependentEffect.Timing.TriggerType);
+                newDependentEffect.MoveAfter(dependentEffect);
+                newDependentEffect.Exit = dependentEffect.Exit;
+                if (dependentEffect.Shape.Type == MsoShapeType.msoPlaceholder)
+                {
+                    try
+                    {
+                        newDependentEffect.Paragraph = dependentEffect.Paragraph;
+                    }
+                    catch
+                    {
+
+                    }
+                }
+                dependentEffect.Delete();
+            }
             ShapesTimeline.CommitEdit();
             ShapesTimeline.CommitEdit();
             ShapesTimeline.Items.Refresh();

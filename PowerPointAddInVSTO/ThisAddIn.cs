@@ -13,6 +13,7 @@ using PowerPointAddInVSTO.Extensions;
 using PowerPointAddInVSTO.UI;
 using Application = Microsoft.Office.Interop.PowerPoint.Application;
 using System.Collections.ObjectModel;
+using System.IO;
 
 namespace PowerPointAddInVSTO
 {
@@ -22,6 +23,8 @@ namespace PowerPointAddInVSTO
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
             Application.Presentations.Open("C:/Users/maxbe/source/repos/PowerPointAddInVSTO/5197_Graca_JJ.pptx");
+            
+
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
@@ -40,8 +43,24 @@ namespace PowerPointAddInVSTO
             this.Startup += new System.EventHandler(ThisAddIn_Startup);
             this.Shutdown += new System.EventHandler(ThisAddIn_Shutdown);
 
-            this.Application.PresentationNewSlide += Application_PresentationNewSlide1;
+            this.Application.PresentationNewSlide += Application_PresentationNewSlide;
 
+            this.Application.PresentationOpen += Application_PresentationOpen;
+
+        }
+
+        private void Application_PresentationOpen(Presentation Pres)
+        {
+           IEnumerable<string> oldTimings = Pres.GetTags();
+            if (oldTimings.Count() > 1)
+            {
+                MessageBox.Show("You already have timings from old narrator.");
+            }
+        }
+
+        private void Application_PresentationNewSlide(Slide Sld)
+        {
+            int p = Sld.Tags.Count;
         }
 
         public List<Slide> GetSlides()
@@ -58,10 +77,6 @@ namespace PowerPointAddInVSTO
         public IEnumerable<Shape> GetAnimateShapes()
         {
             return Application.ActivePresentation.GetAnimateShapes();
-        }
-        private void Application_PresentationNewSlide1(Slide Sld)
-        {
-            int k = Application.ActivePresentation.CustomerData.Count;
         }
 
         public void SetAudio(Slide Sld, string path)

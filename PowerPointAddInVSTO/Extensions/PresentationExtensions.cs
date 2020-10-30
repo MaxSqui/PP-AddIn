@@ -44,7 +44,7 @@ namespace PowerPointAddInVSTO.Extensions
             {
                 foreach (Effect effect in slide.TimeLine.MainSequence)
                 {
-                    if (effect.Shape.Type != Microsoft.Office.Core.MsoShapeType.msoMedia)
+                    if (effect.Shape.Type != Microsoft.Office.Core.MsoShapeType.msoMedia && effect.Timing.TriggerType ==  MsoAnimTriggerType.msoAnimTriggerOnPageClick)
                     {
                         yield return effect;
                     }
@@ -56,10 +56,18 @@ namespace PowerPointAddInVSTO.Extensions
         {
             foreach (Effect effect in slide.TimeLine.MainSequence)
             {
-                if (effect.Shape.Type != Microsoft.Office.Core.MsoShapeType.msoMedia)
+                if (effect.Shape.Type != Microsoft.Office.Core.MsoShapeType.msoMedia && effect.Timing.TriggerType == MsoAnimTriggerType.msoAnimTriggerOnPageClick)
                 {
                     yield return effect;
                 }
+            }
+        }
+
+        public static IEnumerable<string> GetTags (this Presentation presentation)
+        {
+            foreach (Slide slide in presentation.Slides)
+            {
+                yield return slide.Tags["HST_TIMELINE"];
             }
         }
     }

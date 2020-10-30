@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using Microsoft.Office.Interop.PowerPoint;
 
 namespace PowerPointAddInVSTO.Extensions
@@ -30,6 +32,34 @@ namespace PowerPointAddInVSTO.Extensions
                 }
             }
 
+        }
+
+        public static IEnumerable<float> GetTags(this Slide slide)
+        {
+            string timingsValueStr = slide.Tags["HST_TIMELINE"];
+            if (timingsValueStr.Length > 0)
+            {
+                IEnumerable <float> timingsOnSlide = Array.ConvertAll(timingsValueStr.Split('|'), float.Parse);
+                return timingsOnSlide;
+            }
+            return null;
+        }
+
+        //TODO change location
+        public static string ConvertToString(this Slide slide, List<float> tag)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < tag.Count; i++)
+            {
+                sb.Append(tag[i]);
+                sb.Append("|");
+                if (i == tag.Count-1)
+                {
+                    sb.Length -= 1;
+                }
+            }
+            return sb.ToString();
         }
     }
 }
