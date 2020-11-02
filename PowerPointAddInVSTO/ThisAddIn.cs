@@ -65,6 +65,10 @@ namespace PowerPointAddInVSTO
 
         public List<Slide> GetSlides()
         {
+            IEnumerable<float> s  = Application.ActivePresentation.Slides[1].GetTimingsTag();
+            if (s != null) Application.ActivePresentation.Slides[1].Tags.Delete("TIMING");
+            Application.ActivePresentation.Slides[1].Tags.Add("TIMING", "|1|2|3");
+
             List<Slide> slides = new List<Slide>();
 
             foreach (Slide slide in this.Application.ActivePresentation.Slides)

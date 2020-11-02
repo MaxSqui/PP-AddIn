@@ -62,23 +62,16 @@ namespace PowerPointAddInVSTO.UI
             {
                 //TODO: create valication
             }
-            else effect.Timing.TriggerDelayTime = value;
 
-
-
-            foreach (Effect dependentEffect in dependentEffects)
-            {
-                dependentEffect.Timing.TriggerDelayTime = dependentEffect.Timing.TriggerDelayTime + value;
-            }
-
-
-
-            List<float> tags = sld.GetTags().ToList();
-            List<Effect> effects = addIn.Application.ActivePresentation.GetEffects().ToList();
+            List<float> timings = sld.GetTimingsTag().ToList();
+            List<Effect> effects = addIn.Application.ActivePresentation.GetEffectsBySlide(sld).ToList();
             int k = effects.IndexOf(effect);
-            tags[k] = value - tags[k];
-            sld.Tags.Delete("HST_TIMELINE");
-            sld.Tags.Add("HST_TIMELINE", sld.ConvertToString(tags));
+            float diffrence = value;
+            timings[k + 1] = timings[k + 1] + timings[k] - value;
+            timings[k] = diffrence;
+            //effect.Timing.TriggerDelayTime = value - tags[k];
+            sld.Tags.Delete("TIMING");
+            sld.Tags.Add("TIMING", sld.ConvertToString(timings));
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
@@ -87,7 +80,7 @@ namespace PowerPointAddInVSTO.UI
             var effectType = effect.EffectType;
             Shape shape = effect.Shape;
             Slide sld = effect.Shape.Parent as Slide;
-            List <float> tags = sld.GetTags().ToList();
+            List <float> tags = sld.GetTimingsTag().ToList();
             List<Effect> effects = addIn.Application.ActivePresentation.GetEffects().ToList();
             int k = effects.IndexOf(effect);
 

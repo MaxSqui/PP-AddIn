@@ -34,12 +34,24 @@ namespace PowerPointAddInVSTO.Extensions
 
         }
 
-        public static IEnumerable<float> GetTags(this Slide slide)
+        public static IEnumerable<float> GetTimingsTag(this Slide slide)
+        {
+            string timingsValueStr = slide.Tags["TIMING"];
+            if (timingsValueStr.Length > 0)
+            {
+                var newstr = timingsValueStr.Substring(1);
+                IEnumerable <float> timingsOnSlide = Array.ConvertAll(newstr.Split('|'), float.Parse);
+                return timingsOnSlide;
+            }
+            return null;
+        }
+
+        public static IEnumerable<float> GetTags1(this Slide slide)
         {
             string timingsValueStr = slide.Tags["HST_TIMELINE"];
             if (timingsValueStr.Length > 0)
             {
-                IEnumerable <float> timingsOnSlide = Array.ConvertAll(timingsValueStr.Split('|'), float.Parse);
+                IEnumerable<float> timingsOnSlide = Array.ConvertAll(timingsValueStr.Split('|'), float.Parse);
                 return timingsOnSlide;
             }
             return null;
@@ -55,6 +67,23 @@ namespace PowerPointAddInVSTO.Extensions
                 sb.Append(tag[i]);
                 sb.Append("|");
                 if (i == tag.Count-1)
+                {
+                    sb.Length -= 1;
+                }
+            }
+            sb.Insert(0, "|");
+            return sb.ToString();
+        }
+
+        public static string ConvertToString1(this Slide slide, List<float> tag)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < tag.Count; i++)
+            {
+                sb.Append(tag[i]);
+                sb.Append("|");
+                if (i == tag.Count - 1)
                 {
                     sb.Length -= 1;
                 }
