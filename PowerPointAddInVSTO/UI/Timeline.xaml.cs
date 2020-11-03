@@ -63,13 +63,11 @@ namespace PowerPointAddInVSTO.UI
                 //TODO: create valication
             }
 
-            List<float> timings = sld.GetTimingsTag().ToList();
+            List<float> timings = sld.GetTimings().ToList();
             List<Effect> effects = addIn.Application.ActivePresentation.GetEffectsBySlide(sld).ToList();
             int k = effects.IndexOf(effect);
-            float diffrence = value;
             timings[k + 1] = timings[k + 1] + timings[k] - value;
-            timings[k] = diffrence;
-            //effect.Timing.TriggerDelayTime = value - tags[k];
+            timings[k] = value;
             sld.Tags.Delete("TIMING");
             sld.Tags.Add("TIMING", sld.ConvertToString(timings));
         }
@@ -80,7 +78,7 @@ namespace PowerPointAddInVSTO.UI
             var effectType = effect.EffectType;
             Shape shape = effect.Shape;
             Slide sld = effect.Shape.Parent as Slide;
-            List <float> tags = sld.GetTimingsTag().ToList();
+            List <float> tags = sld.GetTimings().ToList();
             List<Effect> effects = addIn.Application.ActivePresentation.GetEffects().ToList();
             int k = effects.IndexOf(effect);
 

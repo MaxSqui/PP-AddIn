@@ -34,7 +34,7 @@ namespace PowerPointAddInVSTO.Extensions
 
         }
 
-        public static IEnumerable<float> GetTimingsTag(this Slide slide)
+        public static IEnumerable<float> GetTimings(this Slide slide)
         {
             string timingsValueStr = slide.Tags["TIMING"];
             if (timingsValueStr.Length > 0)
@@ -89,6 +89,34 @@ namespace PowerPointAddInVSTO.Extensions
                 }
             }
             return sb.ToString();
+        }
+
+        public static float GetCurrentTiming(this Slide slide, List<float> timeline, float effectTimeline, int effectPosition)
+        {
+            float timelineSum = 0;
+            float currentTiming = 0;
+            if(timeline != null)
+            {
+                if (timeline.Count >= effectPosition)
+                {
+                    for (int i = 0; i < effectPosition; i++)
+                    {
+                        timelineSum += timeline[i];
+                    }
+                    //TODO Set new timeline value inside tag
+                }
+                else
+                {
+                    for (int i = 0; i < timeline.Count; i++)
+                    {
+                        timelineSum += timeline[i];
+                        //TODO Set new timeline value inside tag
+                    }
+                }
+
+            }
+            currentTiming = effectTimeline - timelineSum; 
+            return currentTiming;
         }
     }
 }
