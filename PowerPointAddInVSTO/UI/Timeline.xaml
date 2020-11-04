@@ -13,13 +13,13 @@
             <ColumnDefinition Width="145*"/>
             <ColumnDefinition Width="592*"/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="ShapesTimeline" LoadingRow="ShapesTimeline_LoadingRow" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray" RowBackground="LightGray" AlternatingRowBackground="White" CanUserResizeColumns="True" Grid.ColumnSpan="3" Grid.Column="1"  Margin="165,0,0,0">
+        <DataGrid CanUserAddRows="False" x:Name="ShapesTimeline" LoadingRow="ShapesTimeline_LoadingRow" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray" RowBackground="LightGray" AlternatingRowBackground="White" CanUserResizeColumns="True" Grid.ColumnSpan="3" Grid.Column="1"  Margin="165,0,0,0" SelectionChanged="ShapesTimeline_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Display name" Binding="{Binding DisplayName}" Width="100" IsReadOnly="True" />
-                <DataGridTextColumn Header="Slide Number" Binding="{Binding Parent.Parent.Parent.SlideNumber}" Width="90" IsReadOnly="True" />
-                <DataGridTextColumn Header="Type" Binding="{Binding Shape.Type}" Width="120" IsReadOnly="True" />
-                <DataGridTextColumn Header="Current delay time" Binding="{Binding Shape.AnimationSettings.AdvanceTime, Mode=TwoWay}" Width="120" IsReadOnly="False" />
-                <DataGridTemplateColumn Header="New delay time" Width="100" x:Name="delay">
+                <DataGridTextColumn Header="Slide Number" Binding="{Binding SlideNumber}" Width="90" IsReadOnly="True" />
+                <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="120" IsReadOnly="True" />
+                <DataGridTextColumn Header="Timing" Binding="{Binding EffectTimeline}" Width="120"/>
+                <DataGridTemplateColumn Header="New timing" Width="100" x:Name="delay">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:Name="DelayTemplate">
                             <TextBlock x:Name="ActionText">

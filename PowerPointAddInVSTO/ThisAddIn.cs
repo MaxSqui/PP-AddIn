@@ -14,6 +14,7 @@ using PowerPointAddInVSTO.UI;
 using Application = Microsoft.Office.Interop.PowerPoint.Application;
 using System.Collections.ObjectModel;
 using System.IO;
+using PowerPointAddInVSTO.ViewModel;
 
 namespace PowerPointAddInVSTO
 {
@@ -22,7 +23,7 @@ namespace PowerPointAddInVSTO
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
-            //Application.Presentations.Open("C:/Users/maxbe/source/repos/PowerPointAddInVSTO/5197_Graca_JJ.pptx");
+            Application.Presentations.Open("C:/Users/maxbe/source/repos/PowerPointAddInVSTO/5197_Graca_JJ.pptx");
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
@@ -63,16 +64,18 @@ namespace PowerPointAddInVSTO
 
         public List<Slide> GetSlides()
         {
-            IEnumerable<float> s  = Application.ActivePresentation.Slides[1].GetTimings();
-            IEnumerable<float> s2 = Application.ActivePresentation.Slides[2].GetTimings();
+            //var f = Application.ActivePresentation.GetEffects();
+            //int k = f.Count();
+            //IEnumerable<float> s  = Application.ActivePresentation.Slides[1].GetTimings();
+            //IEnumerable<float> s2 = Application.ActivePresentation.Slides[2].GetTimings();
 
-            if (s != null) Application.ActivePresentation.Slides[1].Tags.Delete("TIMING");
-            if (s2 != null) Application.ActivePresentation.Slides[2].Tags.Delete("TIMING");
+            //if (s != null) Application.ActivePresentation.Slides[1].Tags.Delete("TIMING");
+            //if (s2 != null) Application.ActivePresentation.Slides[2].Tags.Delete("TIMING");
 
-            Application.ActivePresentation.Slides[1].Tags.Add("TIMING", "|1|2");
-            Application.ActivePresentation.Slides[2].Tags.Add("TIMING", "|1|2");
-            Application.ActivePresentation.Slides[2].SlideShowTransition.AdvanceOnTime = MsoTriState.msoTrue;
-            Application.ActivePresentation.Slides[1].SlideShowTransition.AdvanceOnTime = MsoTriState.msoTrue;
+            //Application.ActivePresentation.Slides[1].Tags.Add("TIMING", "|1|2");
+            //Application.ActivePresentation.Slides[2].Tags.Add("TIMING", "|1|2");
+            //Application.ActivePresentation.Slides[2].SlideShowTransition.AdvanceOnTime = MsoTriState.msoTrue;
+            //Application.ActivePresentation.Slides[1].SlideShowTransition.AdvanceOnTime = MsoTriState.msoTrue;
 
             List<Slide> slides = new List<Slide>();
 

@@ -34,13 +34,13 @@ namespace PowerPointAddInVSTO.Extensions
 
         }
 
-        public static IEnumerable<float> GetTimings(this Slide slide)
+        public static float[] GetTimings(this Slide slide)
         {
-            string timingsValueStr = slide.Tags["TIMING"];
+            string timingsValueStr = slide.Tags["HST_TIMELINE"];
             if (timingsValueStr.Length > 0)
             {
                 var newstr = timingsValueStr.Substring(1);
-                IEnumerable <float> timingsOnSlide = Array.ConvertAll(newstr.Split('|'), float.Parse);
+                float[] timingsOnSlide = Array.ConvertAll(newstr.Split('|'), float.Parse);
                 return timingsOnSlide;
             }
             return null;
