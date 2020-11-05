@@ -53,56 +53,34 @@ namespace PowerPointAddInVSTO.Extensions
             }
         }
 
-
-        public static IEnumerable<Effect> GetEffectsBySlide(this Presentation presentation, Slide slide)
+        public static float[] GetTimes(this Presentation presentation, string tagName)
         {
-            foreach (Effect effect in slide.TimeLine.MainSequence)
+            StringBuilder allTimings = new StringBuilder();
+            foreach (Slide slide in presentation.Slides)
             {
-                if (effect.Shape.Type != Microsoft.Office.Core.MsoShapeType.msoMedia && effect.Timing.TriggerType == MsoAnimTriggerType.msoAnimTriggerOnPageClick)
+                if(slide.Tags[tagName].Length > 0)
                 {
-                    yield return effect;
+                    allTimings.Append(slide.Tags[tagName]);
                 }
             }
-        }
-
-        public static IEnumerable<string> GetTags(this Presentation presentation)
-        {
-            foreach (Slide slide in presentation.Slides)
-            {
-                yield return slide.Tags["HST_TIMELINE"];
-            }
-        }
-
-        public static float[] GetTimings(this Presentation presentation)
-        {
-            StringBuilder allTimings = new StringBuilder();
-            foreach (Slide slide in presentation.Slides)
-            {
-                allTimings.Append(slide.Tags["HST_TIMELINE"]);
-                allTimings.Append("|");
-            }
-            if (allTimings.Length > 0)
-            {
-                var newstr = allTimings.ToString().Substring(1, allTimings.Length -5);
-                float[] timingsOnSlide = Array.ConvertAll(newstr.Split('|'), float.Parse);
-                return timingsOnSlide;
-            }
-            return null;
-        }
-
-        public static float[] GetTimingsBySlide(this Presentation presentation, Slide slide)
-        {
-            StringBuilder allTimings = new StringBuilder();
-            allTimings.Append(slide.Tags["HST_TIMELINE"]);
-            allTimings.Append("|");
-
             if (allTimings.Length > 1)
             {
-                var newstr = allTimings.ToString().Substring(0, allTimings.Length - 1);
+                var newstr = allTimings.ToString().Substring(1);
                 float[] timingsOnSlide = Array.ConvertAll(newstr.Split('|'), float.Parse);
                 return timingsOnSlide;
             }
-            return null;
+            return new float[0];
+        }
+
+        public static void ConvertExistTimelineTags(this Presentation presentation)
+        {
+            foreach (Slide slide in presentation.Slides)
+            {
+                string oldTimeline = slide.Tags["HST_TIMELINE"];
+                if (oldTimeline.Length == 0) continue;
+                string newTimeline = oldTimeline.Insert(0, "|");
+                slide.Tags.Add("TIMELINE", newTimeline);
+            }
         }
     }
 }

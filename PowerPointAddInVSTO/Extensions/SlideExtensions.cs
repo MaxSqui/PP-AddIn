@@ -34,9 +34,9 @@ namespace PowerPointAddInVSTO.Extensions
 
         }
 
-        public static float[] GetTimings(this Slide slide)
+        public static float[] GetTimes(this Slide slide, string tagName)
         {
-            string timingsValueStr = slide.Tags["HST_TIMELINE"];
+            string timingsValueStr = slide.Tags[tagName];
             if (timingsValueStr.Length > 0)
             {
                 var newstr = timingsValueStr.Substring(1);
@@ -46,48 +46,22 @@ namespace PowerPointAddInVSTO.Extensions
             return null;
         }
 
-        public static IEnumerable<float> GetTags1(this Slide slide)
-        {
-            string timingsValueStr = slide.Tags["HST_TIMELINE"];
-            if (timingsValueStr.Length > 0)
-            {
-                IEnumerable<float> timingsOnSlide = Array.ConvertAll(timingsValueStr.Split('|'), float.Parse);
-                return timingsOnSlide;
-            }
-            return null;
-        }
 
         //TODO change location
-        public static string ConvertToString(this Slide slide, List<float> tag)
+        public static string ConvertTimesToString(this Slide slide, List<float> timings)
         {
             StringBuilder sb = new StringBuilder();
 
-            for (int i = 0; i < tag.Count; i++)
+            for (int i = 0; i < timings.Count; i++)
             {
-                sb.Append(tag[i]);
+                sb.Append(timings[i]);
                 sb.Append("|");
-                if (i == tag.Count-1)
+                if (i == timings.Count-1)
                 {
                     sb.Length -= 1;
                 }
             }
             sb.Insert(0, "|");
-            return sb.ToString();
-        }
-
-        public static string ConvertToString1(this Slide slide, List<float> tag)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            for (int i = 0; i < tag.Count; i++)
-            {
-                sb.Append(tag[i]);
-                sb.Append("|");
-                if (i == tag.Count - 1)
-                {
-                    sb.Length -= 1;
-                }
-            }
             return sb.ToString();
         }
 
@@ -103,20 +77,29 @@ namespace PowerPointAddInVSTO.Extensions
                     {
                         timelineSum += timeline[i];
                     }
-                    //TODO Set new timeline value inside tag
                 }
                 else
                 {
                     for (int i = 0; i < timeline.Count; i++)
                     {
                         timelineSum += timeline[i];
-                        //TODO Set new timeline value inside tag
                     }
                 }
 
             }
             currentTiming = effectTimeline - timelineSum; 
             return currentTiming;
+        }
+
+        public static IEnumerable<Effect> GetEffects(this Slide slide)
+        {
+            foreach (Effect effect in slide.TimeLine.MainSequence)
+            {
+                if (effect.Shape.Type != Microsoft.Office.Core.MsoShapeType.msoMedia && effect.Timing.TriggerType == MsoAnimTriggerType.msoAnimTriggerOnPageClick)
+                {
+                    yield return effect;
+                }
+            }
         }
     }
 }

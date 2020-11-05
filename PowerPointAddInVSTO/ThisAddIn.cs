@@ -50,11 +50,7 @@ namespace PowerPointAddInVSTO
 
         private void Application_PresentationOpen(Presentation Pres)
         {
-           IEnumerable<string> oldTimings = Pres.GetTags();
-            if (oldTimings.Count() > 1)
-            {
-                MessageBox.Show("You already have timings from old narrator.");
-            }
+            Application.ActivePresentation.ConvertExistTimelineTags();
         }
 
         private void Application_PresentationNewSlide(Slide Sld)
@@ -64,19 +60,6 @@ namespace PowerPointAddInVSTO
 
         public List<Slide> GetSlides()
         {
-            //var f = Application.ActivePresentation.GetEffects();
-            //int k = f.Count();
-            //IEnumerable<float> s  = Application.ActivePresentation.Slides[1].GetTimings();
-            //IEnumerable<float> s2 = Application.ActivePresentation.Slides[2].GetTimings();
-
-            //if (s != null) Application.ActivePresentation.Slides[1].Tags.Delete("TIMING");
-            //if (s2 != null) Application.ActivePresentation.Slides[2].Tags.Delete("TIMING");
-
-            //Application.ActivePresentation.Slides[1].Tags.Add("TIMING", "|1|2");
-            //Application.ActivePresentation.Slides[2].Tags.Add("TIMING", "|1|2");
-            //Application.ActivePresentation.Slides[2].SlideShowTransition.AdvanceOnTime = MsoTriState.msoTrue;
-            //Application.ActivePresentation.Slides[1].SlideShowTransition.AdvanceOnTime = MsoTriState.msoTrue;
-
             List<Slide> slides = new List<Slide>();
 
             foreach (Slide slide in this.Application.ActivePresentation.Slides)

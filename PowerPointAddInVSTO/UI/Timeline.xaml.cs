@@ -22,39 +22,47 @@ namespace PowerPointAddInVSTO.UI
             InitializeComponent();
             var effects =addIn.Application.ActivePresentation.GetEffects().ToArray();
             List<EffectViewModel> effectViewModels = new List<EffectViewModel>();
-            var timings = addIn.Application.ActivePresentation.GetTimings().ToArray();
-            for(int i = 0; i < effects.Length; i++)
+            float[] timeline = null;
+            if (addIn.Application.ActivePresentation.GetTimes("TIMELINE").Length > 0)
             {
-                var sequence = effects[i].Parent as Sequence;
-                var timeline = sequence.Parent as TimeLine;
-                var slide = timeline.Parent as Slide;
-                if (i >= timings.Length)
-                {
-                    EffectViewModel ef = new EffectViewModel
-                    {
-                        DisplayName = effects[i].DisplayName,
-                        Slide = slide,
-                        SlideNumber = slide.SlideNumber,
-                        Type = effects[i].Shape.Type,
-                        EffectTimeline = 0
-                    };
-                    effectViewModels.Add(ef);
-                }
-                else
-                {
-                    EffectViewModel ef = new EffectViewModel
-                    {
-                        DisplayName = effects[i].DisplayName,
-                        Slide = slide,
-                        SlideNumber = slide.SlideNumber,
-                        Type = effects[i].Shape.Type,
-                        EffectTimeline = timings[i]
-
-                    };
-                    effectViewModels.Add(ef);
-                }
-
+                timeline = addIn.Application.ActivePresentation.GetTimes("TIMELINE").ToArray();
             }
+                for (int i = 0; i < effects.Length; i++)
+                {
+                    var sequence = effects[i].Parent as Sequence;
+                    var timelineEntity = sequence.Parent as TimeLine;
+                    var slide = timelineEntity.Parent as Slide;
+                    if(timeline == null || i >= timeline.Length)
+                    {
+                        EffectViewModel ef = new EffectViewModel
+                        {
+                            Id = effects[i].Index,
+                            DisplayName = effects[i].DisplayName,
+                            Slide = slide,
+                            SlideNumber = slide.SlideNumber,
+                            Type = effects[i].Shape.Type,
+                            EffectTimeline = 0
+                        };
+                    effectViewModels.Add(ef);
+                    }
+                    else
+                    {
+                        EffectViewModel ef = new EffectViewModel
+                        {
+                            Id = effects[i].Index,
+                            DisplayName = effects[i].DisplayName,
+                            Slide = slide,
+                            SlideNumber = slide.SlideNumber,
+                            Type = effects[i].Shape.Type,
+                            EffectTimeline = timeline[i]
+
+                        };
+                        effectViewModels.Add(ef);
+                    }
+
+                }
+
+            
             ShapesTimeline.ItemsSource = effectViewModels;
             SlideInfo.ItemsSource = addIn.GetSlides();
 
@@ -64,9 +72,9 @@ namespace PowerPointAddInVSTO.UI
             if (SlideInfo.SelectedIndex != -1)
             {
                 Slide row = (Slide)SlideInfo.SelectedItem;
-                var effects = addIn.Application.ActivePresentation.GetEffectsBySlide(row).ToArray();
+                var effects = row.GetEffects().ToArray();
                 List<EffectViewModel> effectViewModels = new List<EffectViewModel>();
-                var timings = addIn.Application.ActivePresentation.GetTimingsBySlide(row);
+                var timings = row.GetTimes("TIMELINE");
                 if (timings != null) 
                 {
                     timings.ToArray();
@@ -79,6 +87,7 @@ namespace PowerPointAddInVSTO.UI
                         {
                             EffectViewModel ef = new EffectViewModel
                             {
+                                Id = effects[i].Index,
                                 DisplayName = effects[i].DisplayName,
                                 Slide = slide,
                                 SlideNumber = slide.SlideNumber,
@@ -91,6 +100,7 @@ namespace PowerPointAddInVSTO.UI
                         {
                             EffectViewModel ef = new EffectViewModel
                             {
+                                Id = effects[i].Index,
                                 DisplayName = effects[i].DisplayName,
                                 Slide = slide,
                                 SlideNumber = slide.SlideNumber,
@@ -109,20 +119,21 @@ namespace PowerPointAddInVSTO.UI
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Refresh_Click(object sender, RoutedEventArgs e)
         {
             var effects = addIn.Application.ActivePresentation.GetEffects().ToArray();
             List<EffectViewModel> effectViewModels = new List<EffectViewModel>();
-            var timings = addIn.Application.ActivePresentation.GetTimings().ToArray();
+            var timelines = addIn.Application.ActivePresentation.GetTimes("TIMELINE").ToArray();
             for (int i = 0; i < effects.Length; i++)
             {
                 var sequence = effects[i].Parent as Sequence;
                 var timeline = sequence.Parent as TimeLine;
                 var slide = timeline.Parent as Slide;
-                if (i >= timings.Length)
+                if (i >= timelines.Length)
                 {
                     EffectViewModel ef = new EffectViewModel
                     {
+                        Id = effects[i].Index,
                         DisplayName = effects[i].DisplayName,
                         Slide = slide,
                         SlideNumber = slide.SlideNumber,
@@ -135,11 +146,12 @@ namespace PowerPointAddInVSTO.UI
                 {
                     EffectViewModel ef = new EffectViewModel
                     {
+                        Id = effects[i].Index,
                         DisplayName = effects[i].DisplayName,
                         Slide = slide,
                         SlideNumber = slide.SlideNumber,
                         Type = effects[i].Shape.Type,
-                        EffectTimeline = timings[i]
+                        EffectTimeline = timelines[i]
 
                     };
                     effectViewModels.Add(ef);
@@ -154,44 +166,41 @@ namespace PowerPointAddInVSTO.UI
         {
             e.Row.Header = (e.Row.GetIndex() + 1).ToString();
         }
-
-        private void ActionCombo_SelectionChanged(object sender, SelectionChangedEventArgs e) 
+       
+        private void SetTiming_Click(object sender, RoutedEventArgs e)
         {
-            ComboBox comboBox = (ComboBox)sender;
-        }
+            ShapesTimeline.CommitEdit();
+            ShapesTimeline.CommitEdit();
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            EffectViewModel effectViewModel = ShapesTimeline.SelectedItem as EffectViewModel;
-
-            Slide sld = effectViewModel.Slide;
-            TextBox valueBox = (TextBox)sender;
-            float value;
-            if (!float.TryParse(valueBox.Text, out value) && value > 0 && value < 65000)
-            {
-                //TODO: create valication
-            }
-            List<float> timings = sld.GetTimings().ToList();
+            EffectViewModel row = (EffectViewModel)ShapesTimeline.SelectedItem;
+            Slide sld = row.Slide;
+            List<Effect> effects = sld.GetEffects().ToList();
+            Effect currentEffect = row.FindEffectById(row.Id, effects);
             List<EffectViewModel> effectViewModels = ShapesTimeline.ItemsSource as List<EffectViewModel>;
-
-            int effectIndex = effectViewModels.IndexOf(effectViewModel);
-            float currvalue = sld.GetCurrentTiming(timings, value, effectIndex);
-            if (effectIndex!=effectViewModels.Count-1) timings[effectIndex + 1] = timings[effectIndex + 1] + timings[effectIndex] - value;
-            //TODO validation currvalue < 0
-            timings[effectIndex] = currvalue;
-            sld.Tags.Delete("TIMING");
-            sld.Tags.Add("TIMING", sld.ConvertToString(timings));
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            ShapesTimeline.CommitEdit();
-            ShapesTimeline.CommitEdit();
-            ShapesTimeline.Items.Refresh();
-        }
-
-        private void ShapesTimeline_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
+            List<float> timings = sld.GetTimes("TIMING").ToList();
+            List<float> timeline = sld.GetTimes("TIMELINE").ToList();
+            //TODO change logic
+            if (sld.GetTimes("TIMELINE") != null && sld.GetTimes("TIMING") != null)
+            {
+                int effectIndex = effects.IndexOf(currentEffect);
+                float currentTiming = sld.GetCurrentTiming(timings, row.EffectTimeline, effectIndex);
+                if (effectIndex != effects.Count() - 1) timings[effectIndex + 1] = timings[effectIndex + 1] + timings[effectIndex] - currentTiming;
+                //TODO validation currvalue < 0
+                timings[effectIndex] = currentTiming;
+                timeline[effectIndex] = row.EffectTimeline;
+                sld.Tags.Delete("TIMING");
+                sld.Tags.Delete("TIMELINE");
+            }
+            else
+            {
+                sld.SlideShowTransition.AdvanceOnTime = MsoTriState.msoTrue;
+                float currvalue = row.EffectTimeline;
+                int effectIndex = effectViewModels.IndexOf(row);
+                timings.Add(currvalue);
+                timeline.Add(row.EffectTimeline);
+            }
+            sld.Tags.Add("TIMING", sld.ConvertTimesToString(timings));
+            sld.Tags.Add("TIMELINE", sld.ConvertTimesToString(timeline));
 
         }
     }
