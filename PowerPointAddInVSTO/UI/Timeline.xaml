@@ -20,8 +20,7 @@
                 <DataGridTextColumn Header="Display name" Binding="{Binding DisplayName}" Width="100" IsReadOnly="True" />
                 <DataGridTextColumn Header="Slide Number" Binding="{Binding SlideNumber}" Width="90" IsReadOnly="True" />
                 <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="120" IsReadOnly="True" />
-                <DataGridTextColumn Header="Timing" Binding="{Binding EffectTimeline}" Width="120"/>
-
+                <DataGridTextColumn Header="Timing" Binding="{Binding EffectTimeline, ValidatesOnDataErrors=True}" Width="120"/>
                 <DataGridTemplateColumn Header="Measure"  Width="110" x:Name="measure" >
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate x:Name="measureTemplate">

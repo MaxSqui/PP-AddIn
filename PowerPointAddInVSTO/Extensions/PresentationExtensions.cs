@@ -82,5 +82,43 @@ namespace PowerPointAddInVSTO.Extensions
                 slide.Tags.Add("TIMELINE", newTimeline);
             }
         }
+
+        public static void SetDefaultTimings(this Presentation presentation)
+        {
+            foreach (Slide slide in presentation.Slides)
+            {
+                IEnumerable<Effect> effects = slide.GetMainEffects();
+                string timing = slide.Tags["TIMING"];
+               
+                if (timing.Length == 0)
+                {
+                    StringBuilder times = new StringBuilder();
+                    foreach (Effect effect in effects)
+                    {
+                        times.Append("|0");
+                    }
+                    slide.SlideShowTransition.AdvanceOnTime = Microsoft.Office.Core.MsoTriState.msoTrue;
+                    slide.Tags.Add("TIMING", times.ToString());
+                    slide.Tags.Add("TIMELINE", times.ToString());
+                }
+
+                float[] timings = slide.GetTimes("TIMING");
+
+                if (effects.Count() > timings.Length)
+                {
+                    StringBuilder times = new StringBuilder(timing);
+                    int diffrence = effects.Count() - timings.Length;
+                    for (int i = 0; i < diffrence; i++)
+                    {
+                        times.Append('|');
+                        times.Append('0');
+                    }
+                    slide.Tags.Delete("TIMING");
+                    slide.Tags.Delete("TIMELINE");
+                    slide.Tags.Add("TIMING", times.ToString());
+                    slide.Tags.Add("TIMELINE", times.ToString());
+                }
+            }
+        }
     }
 }

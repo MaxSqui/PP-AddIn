@@ -199,6 +199,7 @@
       <DependentUpon>Timeline.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\EffectViewModel.cs" />
+    <Compile Include="ViewModel\EffectViewModelValidationRule.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

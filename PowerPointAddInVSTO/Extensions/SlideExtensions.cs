@@ -43,7 +43,7 @@ namespace PowerPointAddInVSTO.Extensions
                 float[] timingsOnSlide = Array.ConvertAll(newstr.Split('|'), float.Parse);
                 return timingsOnSlide;
             }
-            return null;
+            return new float[0];
         }
 
 
@@ -91,7 +91,7 @@ namespace PowerPointAddInVSTO.Extensions
             return currentTiming;
         }
 
-        public static IEnumerable<Effect> GetEffects(this Slide slide)
+        public static IEnumerable<Effect> GetMainEffects(this Slide slide)
         {
             foreach (Effect effect in slide.TimeLine.MainSequence)
             {
