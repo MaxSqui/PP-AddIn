@@ -10,7 +10,7 @@
         <DataGrid x:Name="slidetrack" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray" RowBackground="LightGray" AlternatingRowBackground="White" CanUserResizeColumns="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Slide" Binding="{Binding SlideNumber}" Width="35" IsReadOnly="True" />
-                <DataGridTextColumn Header="Path" Binding="{Binding Name}" Width="290" IsReadOnly="True" />
+                <DataGridTextColumn Header="Path" Binding="{Binding AudioPath}" Width="290" IsReadOnly="True" />
 
                 <DataGridTemplateColumn>
                     <DataGridTemplateColumn.CellTemplate>

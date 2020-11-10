@@ -1,44 +1,25 @@
 ﻿using Microsoft.Office.Interop.PowerPoint;
 using PowerPointAddInVSTO.Extensions;
-using System;
+using PowerPointAddInVSTO.ViewModel;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace PowerPointAddInVSTO.UI
 {
-    /// <summary>
-    /// Interaction logic for AudioInserter.xaml
-    /// </summary>
     public partial class AudioInserter : Window
     {
+        ThisAddIn addIn = Globals.ThisAddIn;
         public AudioInserter()
         {
             InitializeComponent();
 
-            var addIn = Globals.ThisAddIn;
-
-            slidetrack.ItemsSource = addIn.GetSlides();
+            slidetrack.ItemsSource = GetSlidetrackViewModels().ToList();
         }
-
-        public string FilePath { get; private set; } = "none";
-
         private void Browse(object sender, RoutedEventArgs e)
         {
-
-            var addIn = Globals.ThisAddIn;
-            var currentSlide = slidetrack.CurrentItem as Slide;
+            var currentSlidetrackViewModel = slidetrack.CurrentItem as SlidetrackViewModel;
+            var currentSlide = addIn.Application.ActivePresentation.GetSlideByNumber(currentSlidetrackViewModel.SlideNumber);
 
             Microsoft.Win32.OpenFileDialog openFileDlg = new Microsoft.Win32.OpenFileDialog();
             if (openFileDlg.ShowDialog() == true)
@@ -49,14 +30,14 @@ namespace PowerPointAddInVSTO.UI
                     int formatSep = currentFullAudioName.LastIndexOf(".");
                     string currentAudioName = currentFullAudioName.Remove(formatSep);
                     IEnumerable<string> mediaNames = addIn.Application.ActivePresentation.GetMediaNames();
-                    if (!mediaNames.Contains(currentAudioName))
+                    if (!IsAlreadyInput(mediaNames.ToList(), currentAudioName, currentSlidetrackViewModel.SlideNumber))
                     {
-                        FilePath = openFileDlg.FileName;
-                        currentSlide.Name = FilePath;
-                        this.slidetrack.CommitEdit();
-                        this.slidetrack.CommitEdit();
+                        currentSlide.Name = openFileDlg.FileName;
+                        currentSlidetrackViewModel.AudioPath = openFileDlg.FileName;
+                        slidetrack.CommitEdit();
+                        slidetrack.CommitEdit();
                         slidetrack.Items.Refresh();
-                        addIn.SetAudio(currentSlide, FilePath);
+                        currentSlide.SetAudio(currentSlidetrackViewModel.AudioPath);
                         return;
                     }
                     else MessageBox.Show("This audio file has already in your presentation!");
@@ -65,5 +46,27 @@ namespace PowerPointAddInVSTO.UI
             }
         }
 
+        public bool IsAlreadyInput(List<string> mediaNames, string audioName, int currentSlideNumber)
+        {
+            for (int i = 0; i < mediaNames.Count(); i++)
+            {
+                if (mediaNames[i] == audioName && i+1 != currentSlideNumber) return true; 
+            }
+            return false;
+        }
+
+        public IEnumerable<SlidetrackViewModel> GetSlidetrackViewModels()
+        {
+            IEnumerable<Slide> slides = addIn.Application.ActivePresentation.GetSlides();
+            foreach (Slide slide in slides)
+            {
+                var currentSlidetrackViewModel = new SlidetrackViewModel
+                {
+                    SlideNumber = slide.SlideNumber,
+                    AudioPath = slide.Name
+                };
+                yield return currentSlidetrackViewModel;
+            }
+        }
     }
 }

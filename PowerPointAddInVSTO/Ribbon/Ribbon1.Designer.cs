@@ -47,7 +47,7 @@
             // 
             this.tab1.ControlId.ControlIdType = Microsoft.Office.Tools.Ribbon.RibbonControlIdType.Office;
             this.tab1.Groups.Add(this.group1);
-            this.tab1.Label = "TabAddIns";
+            this.tab1.Label = "Narrator";
             this.tab1.Name = "tab1";
             // 
             // group1
@@ -55,7 +55,7 @@
             this.group1.DialogLauncher = ribbonDialogLauncherImpl1;
             this.group1.Items.Add(this.button1);
             this.group1.Items.Add(this.button2);
-            this.group1.Label = "group1";
+            this.group1.Label = "Add-In";
             this.group1.Name = "group1";
             // 
             // button1
@@ -66,7 +66,7 @@
             // 
             // button2
             // 
-            this.button2.Label = "Shapes";
+            this.button2.Label = "Timings";
             this.button2.Name = "button2";
             this.button2.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.button2_Click);
             // 

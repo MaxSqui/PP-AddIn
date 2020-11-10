@@ -1,15 +1,32 @@
 ﻿using Microsoft.Office.Interop.PowerPoint;
-using PowerPointAddInVSTO.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace PowerPointAddInVSTO.Extensions
 {
     public static class PresentationExtensions
     {
+        public const string TIMING = "TIMING";
+        public const string TIMELINE = "TIMELINE";
+        public const string OLD_TIMELINE = "HST_TIMELINE";
+        public static IEnumerable<Slide> GetSlides(this Presentation presentation)
+        {
+            foreach (Slide slide in presentation.Slides)
+            {
+                yield return slide;
+            }
+        }
+        public static Slide GetSlideByNumber(this Presentation presentation, int slideNumber)
+        {
+            foreach (Slide slide in presentation.Slides)
+            {
+                if (slide.SlideNumber == slideNumber)
+                    return slide; 
+            }
+            return null;
+        }
         public static IEnumerable<string> GetMediaNames(this Presentation presentation)
         {
             foreach (Slide slide in presentation.Slides)
@@ -19,21 +36,6 @@ namespace PowerPointAddInVSTO.Extensions
                     if (shape.Type == Microsoft.Office.Core.MsoShapeType.msoMedia)
                     {
                         yield return shape.Name;
-                    }
-                }
-            }
-        }
-
-        public static IEnumerable<Shape> GetAnimateShapes(this Presentation presentation)
-        {
-            foreach (Slide slide in presentation.Slides)
-            {
-                foreach (Shape shape in slide.Shapes)
-                {
-                    if (shape.AnimationSettings.Animate == Microsoft.Office.Core.MsoTriState.msoTrue &&
-                        shape.Type != Microsoft.Office.Core.MsoShapeType.msoMedia)
-                    {
-                        yield return shape;
                     }
                 }
             }
@@ -76,10 +78,10 @@ namespace PowerPointAddInVSTO.Extensions
         {
             foreach (Slide slide in presentation.Slides)
             {
-                string oldTimeline = slide.Tags["HST_TIMELINE"];
+                string oldTimeline = slide.Tags[OLD_TIMELINE];
                 if (oldTimeline.Length == 0) continue;
                 string newTimeline = oldTimeline.Insert(0, "|");
-                slide.Tags.Add("TIMELINE", newTimeline);
+                slide.Tags.Add(TIMELINE, newTimeline);
             }
         }
 
@@ -88,9 +90,10 @@ namespace PowerPointAddInVSTO.Extensions
             foreach (Slide slide in presentation.Slides)
             {
                 IEnumerable<Effect> effects = slide.GetMainEffects();
-                string timing = slide.Tags["TIMING"];
+                string timingsTag = slide.Tags[TIMING];
+                string timelineTag = slide.Tags[TIMELINE];
                
-                if (timing.Length == 0)
+                if (timingsTag.Length == 0)
                 {
                     StringBuilder times = new StringBuilder();
                     foreach (Effect effect in effects)
@@ -98,25 +101,49 @@ namespace PowerPointAddInVSTO.Extensions
                         times.Append("|0");
                     }
                     slide.SlideShowTransition.AdvanceOnTime = Microsoft.Office.Core.MsoTriState.msoTrue;
-                    slide.Tags.Add("TIMING", times.ToString());
-                    slide.Tags.Add("TIMELINE", times.ToString());
+                    slide.Tags.Add(TIMING, times.ToString());
+                    slide.Tags.Add(TIMELINE, times.ToString());
                 }
 
-                float[] timings = slide.GetTimes("TIMING");
+                float[] timings = slide.GetTimes(TIMING);
 
                 if (effects.Count() > timings.Length)
                 {
-                    StringBuilder times = new StringBuilder(timing);
+                    StringBuilder timingsBuilder = new StringBuilder(timingsTag);
+                    StringBuilder timelineBuilder = new StringBuilder(timelineTag);
                     int diffrence = effects.Count() - timings.Length;
                     for (int i = 0; i < diffrence; i++)
                     {
-                        times.Append('|');
-                        times.Append('0');
+                        timingsBuilder.Append('|');
+                        timingsBuilder.Append('0');
+
+                        timelineBuilder.Append('|');
+                        timelineBuilder.Append('0');
+
                     }
-                    slide.Tags.Delete("TIMING");
-                    slide.Tags.Delete("TIMELINE");
-                    slide.Tags.Add("TIMING", times.ToString());
-                    slide.Tags.Add("TIMELINE", times.ToString());
+                    slide.Tags.Delete(TIMING);
+                    slide.Tags.Delete(TIMELINE);
+                    slide.Tags.Add(TIMING, timingsBuilder.ToString());
+                    slide.Tags.Add(TIMELINE, timelineBuilder.ToString());
+                }
+
+                if(effects.Count() < timings.Length)
+                {
+                    int diffrence =  timings.Length- effects.Count();
+                    for (int i = 0; i < diffrence; i++)
+                    {
+                        int timingSeparator = timingsTag.LastIndexOf('|');
+                        timingsTag = timingsTag.Remove(timingSeparator);
+
+                        int timelineSeparator = timelineTag.LastIndexOf('|');
+                        timelineTag = timelineTag.Remove(timelineSeparator);
+
+                    }
+                    slide.Tags.Delete(TIMING);
+                    slide.Tags.Delete(TIMELINE);
+                    slide.Tags.Add(TIMING, timingsTag);
+                    slide.Tags.Add(TIMELINE, timelineTag);
+
                 }
             }
         }

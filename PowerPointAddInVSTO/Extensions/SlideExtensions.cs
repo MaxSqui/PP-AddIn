@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using Microsoft.Office.Core;
 using Microsoft.Office.Interop.PowerPoint;
+using Shape = Microsoft.Office.Interop.PowerPoint.Shape;
 
 namespace PowerPointAddInVSTO.Extensions
 {
@@ -11,14 +12,13 @@ namespace PowerPointAddInVSTO.Extensions
         {
             foreach (Shape shape in slide.Shapes)
             {
-                if (shape.Type == Microsoft.Office.Core.MsoShapeType.msoMedia)
+                if (shape.Type == MsoShapeType.msoMedia)
                 {
                     return shape;
                 }
             }
             return null;
         }
-
         public static void RemoveAnimationTrigger(this Slide slide, Shape shape)
         {
             foreach(Sequence sequence in slide.TimeLine.InteractiveSequences)
@@ -33,7 +33,6 @@ namespace PowerPointAddInVSTO.Extensions
             }
 
         }
-
         public static float[] GetTimes(this Slide slide, string tagName)
         {
             string timingsValueStr = slide.Tags[tagName];
@@ -45,26 +44,6 @@ namespace PowerPointAddInVSTO.Extensions
             }
             return new float[0];
         }
-
-
-        //TODO change location
-        public static string ConvertTimesToString(this Slide slide, List<float> timings)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            for (int i = 0; i < timings.Count; i++)
-            {
-                sb.Append(timings[i]);
-                sb.Append("|");
-                if (i == timings.Count-1)
-                {
-                    sb.Length -= 1;
-                }
-            }
-            sb.Insert(0, "|");
-            return sb.ToString();
-        }
-
         public static float GetCurrentTiming(this Slide slide, List<float> timeline, float effectTimeline, int effectPosition)
         {
             float timelineSum = 0;
@@ -90,7 +69,6 @@ namespace PowerPointAddInVSTO.Extensions
             currentTiming = effectTimeline - timelineSum; 
             return currentTiming;
         }
-
         public static IEnumerable<Effect> GetMainEffects(this Slide slide)
         {
             foreach (Effect effect in slide.TimeLine.MainSequence)
@@ -100,6 +78,15 @@ namespace PowerPointAddInVSTO.Extensions
                     yield return effect;
                 }
             }
+        }
+        public static void SetAudio(this Slide Sld, string path)
+        {
+            Shape existAudio = Sld.GetAudioShape();
+            if (existAudio != null) existAudio.Delete();
+            Shape audio = Sld.Shapes.AddMediaObject2(path, MsoTriState.msoTrue, MsoTriState.msoTrue, 750, 500);
+            Effect audioEffect = Sld.TimeLine.MainSequence.AddEffect(audio, MsoAnimEffect.msoAnimEffectMediaPlay, MsoAnimateByLevel.msoAnimateLevelNone, MsoAnimTriggerType.msoAnimTriggerWithPrevious);
+            audioEffect.MoveTo(1);
+            Sld.RemoveAnimationTrigger(audio);
         }
     }
 }

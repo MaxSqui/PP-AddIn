@@ -1,10 +1,6 @@
 ﻿using Microsoft.Office.Interop.PowerPoint;
 using PowerPointAddInVSTO.ViewModel;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PowerPointAddInVSTO.Extensions
 {

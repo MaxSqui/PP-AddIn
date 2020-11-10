@@ -1,7 +1,6 @@
 ﻿using Microsoft.Office.Core;
 using Microsoft.Office.Interop.PowerPoint;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -10,23 +9,21 @@ namespace PowerPointAddInVSTO.ViewModel
 {
     public class EffectViewModel : INotifyPropertyChanged,  IDataErrorInfo
     {
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        public void OnPropertyChanged([CallerMemberName] string prop = "")
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(prop));
-        }
-
         public int Id { get; set; }
+
         public string DisplayName { get; set; }
+
         public Slide Slide { get; set; }
+
         public int SlideNumber { get; set; }
+
         public MsoShapeType Type { get; set; }
-        private float effectTimeline { get; set; }
 
         public float LastEffectTimeline { get; set; }
+
         public int LastSlideNumber { get; set; }
+        private float effectTimeline { get; set; }
+
         public float EffectTimeline 
         { 
             get { return effectTimeline; } 
@@ -39,6 +36,12 @@ namespace PowerPointAddInVSTO.ViewModel
 
         public bool IsSec { get; set; }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void OnPropertyChanged([CallerMemberName] string prop = "")
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
         public string Error
         {
             get { throw new NotImplementedException(); }
@@ -52,7 +55,7 @@ namespace PowerPointAddInVSTO.ViewModel
                 switch (columnName)
                 {
                     case "EffectTimeline":
-                        if (EffectTimeline < LastEffectTimeline && SlideNumber == LastSlideNumber)
+                        if (EffectTimeline <= LastEffectTimeline && SlideNumber == LastSlideNumber)
                         {
                             error = "Value can not be less than previous";
                         }

@@ -183,6 +183,7 @@
     <Compile Include="Extensions\PresentationExtensions.cs" />
     <Compile Include="Extensions\SequenceExtensions.cs" />
     <Compile Include="Extensions\SlideExtensions.cs" />
+    <Compile Include="Extensions\TimingExntensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -199,7 +200,7 @@
       <DependentUpon>Timeline.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\EffectViewModel.cs" />
-    <Compile Include="ViewModel\EffectViewModelValidationRule.cs" />
+    <Compile Include="ViewModel\SlidetrackViewModel.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
