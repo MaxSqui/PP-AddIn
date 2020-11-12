@@ -55,7 +55,7 @@ namespace PowerPointAddInVSTO.Extensions
             }
         }
 
-        public static float[] GetTimes(this Presentation presentation, string tagName)
+        public static double[] GetTimes(this Presentation presentation, string tagName)
         {
             StringBuilder allTimings = new StringBuilder();
             foreach (Slide slide in presentation.Slides)
@@ -68,10 +68,19 @@ namespace PowerPointAddInVSTO.Extensions
             if (allTimings.Length > 1)
             {
                 var newstr = allTimings.ToString().Substring(1);
-                float[] timingsOnSlide = Array.ConvertAll(newstr.Split('|'), float.Parse);
+                double[] timingsOnSlide = Array.ConvertAll(newstr.Split('|'), double.Parse);
                 return timingsOnSlide;
             }
-            return new float[0];
+            return new double[0];
+        }
+
+        public static IEnumerable<TimeSpan> GetTimeSpanTimelines(this Presentation pres, double[] timeline)
+        {
+            foreach (float time in timeline)
+            {
+                TimeSpan timeSpan = TimeSpan.FromSeconds(time);
+                yield return timeSpan;
+            }
         }
 
         public static void ConvertExistTimelineTags(this Presentation presentation)
@@ -105,7 +114,7 @@ namespace PowerPointAddInVSTO.Extensions
                     slide.Tags.Add(TIMELINE, times.ToString());
                 }
 
-                float[] timings = slide.GetTimes(TIMING);
+                double[] timings = slide.GetTimes(TIMING);
 
                 if (effects.Count() > timings.Length)
                 {
@@ -121,8 +130,6 @@ namespace PowerPointAddInVSTO.Extensions
                         timelineBuilder.Append('0');
 
                     }
-                    slide.Tags.Delete(TIMING);
-                    slide.Tags.Delete(TIMELINE);
                     slide.Tags.Add(TIMING, timingsBuilder.ToString());
                     slide.Tags.Add(TIMELINE, timelineBuilder.ToString());
                 }
@@ -139,8 +146,6 @@ namespace PowerPointAddInVSTO.Extensions
                         timelineTag = timelineTag.Remove(timelineSeparator);
 
                     }
-                    slide.Tags.Delete(TIMING);
-                    slide.Tags.Delete(TIMELINE);
                     slide.Tags.Add(TIMING, timingsTag);
                     slide.Tags.Add(TIMELINE, timelineTag);
 

@@ -5,7 +5,7 @@
     x:Class="PowerPointAddInVSTO.UI.Timeline"
     Title="Objects timeline" 
     Height="300" 
-    Width="938" ResizeMode="CanMinimize" >
+    Width="728" ResizeMode="CanMinimize" >
     <Grid Margin="0,0,-6,0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="52*"/>
@@ -15,45 +15,22 @@
             <ColumnDefinition Width="91*"/>
             <ColumnDefinition Width="102*"/>
         </Grid.ColumnDefinitions>
-        <DataGrid x:Name="ShapesTimeline" CanUserAddRows="False"  LoadingRow="ShapesTimeline_LoadingRow" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray" RowBackground="LightGray" AlternatingRowBackground="White" CanUserResizeColumns="True" Grid.ColumnSpan="4" Grid.Column="2"  Margin="2,0,0,0" HorizontalAlignment="Left" Width="685">
+        <DataGrid x:Name="ShapesTimeline" RowEditEnding="ShapesTimeline_RowEditEnding"  CanUserAddRows="False"  LoadingRow="ShapesTimeline_LoadingRow" AutoGenerateColumns="False" HorizontalGridLinesBrush="DarkGray" RowBackground="LightGray" AlternatingRowBackground="White" CanUserResizeColumns="True" Grid.ColumnSpan="4" Grid.Column="2"  Margin="60,0,0,0" HorizontalAlignment="Left" Width="471">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Display name" Binding="{Binding DisplayName}" Width="100" IsReadOnly="True" />
                 <DataGridTextColumn Header="Slide Number" Binding="{Binding SlideNumber}" Width="90" IsReadOnly="True" />
                 <DataGridTextColumn Header="Type" Binding="{Binding Type}" Width="120" IsReadOnly="True" />
-                <DataGridTextColumn Header="Timing" Binding="{Binding EffectTimeline, ValidatesOnDataErrors=True}" Width="120"/>
-                <!--<DataGridTemplateColumn Header="Measure"  Width="110" x:Name="measure" >
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate x:Name="measureTemplate">
-                            <ComboBox x:Name="ActionCombo" IsReadOnly="True" IsEditable="True" Text="Select value">
-                                <ComboBoxItem>Seconds</ComboBoxItem>
-                                <ComboBoxItem>Minutes</ComboBoxItem>
-                            </ComboBox>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>-->
-                <DataGridTemplateColumn Header="In Seconds">
-                <DataGridTemplateColumn.CellTemplate>
-                    <DataTemplate>
-                        <CheckBox IsChecked="{Binding IsSec, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" />
-                    </DataTemplate>
-                </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                <DataGridTemplateColumn Width="100">
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Button Click="SetTiming_Click">Set</Button>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                <!--StringFormat=h\\:m\\:ss\\.ff-->
+                <DataGridTextColumn  Header="Timing" Binding="{Binding EffectTimeline, StringFormat=h\\:m\\:ss\\.ff, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged }" Width="120"/>
             </DataGrid.Columns>
         </DataGrid>
-        <DataGrid x:Name="SlideInfo" Margin="0,0,10,0" Grid.ColumnSpan="2" SelectionChanged="SlideInfo_SelectionChanged">
+        <DataGrid x:Name="SlideInfo" Margin="0,0,58.516,0" Grid.ColumnSpan="3" SelectionChanged="SlideInfo_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Slide" Binding="{Binding SlideNumber}" Width="35" IsReadOnly="True" />
                 <DataGridTextColumn Header="Total Clicks" Binding="{Binding TimeLine.MainSequence.Count}" Width="80" IsReadOnly="True" />
                 <DataGridTextColumn Header="Time" Binding="{Binding SlideShowTransition.AdvanceTime}" Width="90" />
             </DataGrid.Columns>
         </DataGrid>
-        <Button Margin="82.416,0,24.584,236" Grid.Column="4" Click="Refresh_Click" Grid.ColumnSpan="2">Show all</Button>
+        <Button Margin="65.484,0,23.516,236" Grid.Column="4" Click="Refresh_Click" Grid.ColumnSpan="2">Show all</Button>
     </Grid>
 </Window>

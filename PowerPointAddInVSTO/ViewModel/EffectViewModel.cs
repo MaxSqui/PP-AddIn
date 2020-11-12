@@ -19,12 +19,12 @@ namespace PowerPointAddInVSTO.ViewModel
 
         public MsoShapeType Type { get; set; }
 
-        public float LastEffectTimeline { get; set; }
+        public TimeSpan LastEffectTimeline { get; set; }
 
         public int LastSlideNumber { get; set; }
-        private float effectTimeline { get; set; }
+        private TimeSpan effectTimeline { get; set; }
 
-        public float EffectTimeline 
+        public TimeSpan EffectTimeline 
         { 
             get { return effectTimeline; } 
             set 
@@ -34,7 +34,7 @@ namespace PowerPointAddInVSTO.ViewModel
             } 
         }
 
-        public bool IsSec { get; set; }
+        public bool IsMin { get; set; }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")

@@ -33,21 +33,21 @@ namespace PowerPointAddInVSTO.Extensions
             }
 
         }
-        public static float[] GetTimes(this Slide slide, string tagName)
+        public static double[] GetTimes(this Slide slide, string tagName)
         {
             string timingsValueStr = slide.Tags[tagName];
             if (timingsValueStr.Length > 0)
             {
                 var newstr = timingsValueStr.Substring(1);
-                float[] timingsOnSlide = Array.ConvertAll(newstr.Split('|'), float.Parse);
+                double[] timingsOnSlide = Array.ConvertAll(newstr.Split('|'), double.Parse);
                 return timingsOnSlide;
             }
-            return new float[0];
+            return new double[0];
         }
-        public static float GetCurrentTiming(this Slide slide, List<float> timeline, float effectTimeline, int effectPosition)
+        public static double GetCurrentTiming(this Slide slide, List<double> timeline, double effectTimeline, int effectPosition)
         {
-            float timelineSum = 0;
-            float currentTiming = 0;
+            double timelineSum = 0;
+            double currentTiming = 0;
             if(timeline != null)
             {
                 if (timeline.Count >= effectPosition)

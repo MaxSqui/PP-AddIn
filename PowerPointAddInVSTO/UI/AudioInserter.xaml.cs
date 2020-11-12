@@ -9,7 +9,9 @@ namespace PowerPointAddInVSTO.UI
 {
     public partial class AudioInserter : Window
     {
+        const string TRACK = "TRACK";
         ThisAddIn addIn = Globals.ThisAddIn;
+
         public AudioInserter()
         {
             InitializeComponent();
@@ -32,12 +34,12 @@ namespace PowerPointAddInVSTO.UI
                     IEnumerable<string> mediaNames = addIn.Application.ActivePresentation.GetMediaNames();
                     if (!IsAlreadyInput(mediaNames.ToList(), currentAudioName, currentSlidetrackViewModel.SlideNumber))
                     {
-                        currentSlide.Name = openFileDlg.FileName;
+                        currentSlide.Tags.Add("TRACK", openFileDlg.FileName);
                         currentSlidetrackViewModel.AudioPath = openFileDlg.FileName;
                         slidetrack.CommitEdit();
                         slidetrack.CommitEdit();
                         slidetrack.Items.Refresh();
-                        currentSlide.SetAudio(currentSlidetrackViewModel.AudioPath);
+                        currentSlide.SetAudio(currentSlide.Tags[TRACK]);
                         return;
                     }
                     else MessageBox.Show("This audio file has already in your presentation!");
@@ -63,7 +65,7 @@ namespace PowerPointAddInVSTO.UI
                 var currentSlidetrackViewModel = new SlidetrackViewModel
                 {
                     SlideNumber = slide.SlideNumber,
-                    AudioPath = slide.Name
+                    AudioPath = slide.Tags["TRACK"]
                 };
                 yield return currentSlidetrackViewModel;
             }

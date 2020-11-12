@@ -5,7 +5,7 @@ namespace PowerPointAddInVSTO.Extensions
 {
     public static class TimingExntensions
     {
-        public static string ConvertTimesToString(this List<float> timings)
+        public static string ConvertTimesToString(this List<double> timings)
         {
             StringBuilder sb = new StringBuilder();
 
