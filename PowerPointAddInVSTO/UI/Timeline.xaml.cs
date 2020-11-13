@@ -19,7 +19,7 @@ namespace PowerPointAddInVSTO.UI
         {
             InitializeComponent();
             ShapesTimeline.ItemsSource = InitializeEffects().ToList();
-            SlideInfo.ItemsSource = addIn.Application.ActivePresentation.GetSlides().ToList();
+            SlideInfo.ItemsSource = InitializeSlideInfos().ToList();
         }
         private void SlideInfo_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -89,9 +89,9 @@ namespace PowerPointAddInVSTO.UI
         }
         private IEnumerable<EffectViewModel> InitializeEffectsBySlide()
         {
-            Slide row = (Slide)SlideInfo.SelectedItem;
-            var effects = row.GetMainEffects().ToArray();
-            var timeline = row.GetTimes(TIMELINE).ToArray();
+            SlideInfoViewModel row = (SlideInfoViewModel)SlideInfo.SelectedItem;
+            var effects = row.Slide.GetMainEffects().ToArray();
+            var timeline = row.Slide.GetTimes(TIMELINE).ToArray();
             TimeSpan[] timeSpans = addIn.Application.ActivePresentation.GetTimeSpanTimelines(timeline).ToArray();
 
             for (int effectIndex = 0; effectIndex < effects.Length; effectIndex++)
@@ -121,6 +121,7 @@ namespace PowerPointAddInVSTO.UI
                         Id = effects[effectIndex].Index,
                         DisplayName = effects[effectIndex].DisplayName,
                         Slide = slide,
+                        Effect = effects[effectIndex],
                         SlideNumber = slide.SlideNumber,
                         LastSlideNumber = slide.SlideNumber,
                         Type = effects[effectIndex].Shape.Type,
@@ -132,17 +133,31 @@ namespace PowerPointAddInVSTO.UI
 
             }
         }
+        private IEnumerable<SlideInfoViewModel> InitializeSlideInfos()
+        {
+            IEnumerable<Slide> slides = addIn.Application.ActivePresentation.GetSlides();
+            foreach (Slide slide in slides)
+            {
+                var currentSlideInfoViewModel = new SlideInfoViewModel
+                {
+                    Number = slide.SlideNumber,
+                    Clicks = slide.GetMainEffects().Count(),
+                    SlideTime = slide.SlideShowTransition.AdvanceTime,
+                    Slide = slide
+                };
+                yield return currentSlideInfoViewModel;
+            }
+        }
 
         private void ShapesTimeline_RowEditEnding(object sender, DataGridRowEditEndingEventArgs e)
         {
             EffectViewModel row = (EffectViewModel)ShapesTimeline.SelectedItem;
             Slide sld = row.Slide;
             List<Effect> effects = sld.GetMainEffects().ToList();
-            Effect currentEffect = row.FindEffectById(row.Id, effects);
             List<double> timings = sld.GetTimes(TIMING).ToList();
             List<double> timeline = sld.GetTimes(TIMELINE).ToList();
 
-            int effectIndex = effects.IndexOf(currentEffect);
+            int effectIndex = effects.IndexOf(row.Effect);
             double currentTiming = sld.GetCurrentTiming(timings, row.EffectTimeline.TotalSeconds, effectIndex);
             if (effectIndex != effects.Count() - 1) timings[effectIndex + 1] = timings[effectIndex + 1] + timings[effectIndex] - currentTiming;
 

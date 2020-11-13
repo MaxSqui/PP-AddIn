@@ -24,11 +24,11 @@
                 <DataGridTextColumn  Header="Timing" Binding="{Binding EffectTimeline, StringFormat=h\\:m\\:ss\\.ff, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged }" Width="120"/>
             </DataGrid.Columns>
         </DataGrid>
-        <DataGrid x:Name="SlideInfo" Margin="0,0,58.516,0" Grid.ColumnSpan="3" SelectionChanged="SlideInfo_SelectionChanged">
+        <DataGrid x:Name="SlideInfo" AutoGenerateColumns="False" CanUserAddRows="False" Margin="0,0,58.516,0" Grid.ColumnSpan="3" SelectionChanged="SlideInfo_SelectionChanged">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Slide" Binding="{Binding SlideNumber}" Width="35" IsReadOnly="True" />
-                <DataGridTextColumn Header="Total Clicks" Binding="{Binding TimeLine.MainSequence.Count}" Width="80" IsReadOnly="True" />
-                <DataGridTextColumn Header="Time" Binding="{Binding SlideShowTransition.AdvanceTime}" Width="90" />
+                <DataGridTextColumn Header="Slide" Binding="{Binding Number}" Width="35" IsReadOnly="True" />
+                <DataGridTextColumn Header="Total Clicks" Binding="{Binding Clicks}" Width="80" IsReadOnly="True" />
+                <DataGridTextColumn Header="Slide time" Binding="{Binding SlideTime}" Width="90" />
             </DataGrid.Columns>
         </DataGrid>
         <Button Margin="65.484,0,23.516,236" Grid.Column="4" Click="Refresh_Click" Grid.ColumnSpan="2">Show all</Button>

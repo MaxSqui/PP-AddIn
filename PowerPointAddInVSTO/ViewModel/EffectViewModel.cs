@@ -15,6 +15,8 @@ namespace PowerPointAddInVSTO.ViewModel
 
         public Slide Slide { get; set; }
 
+        public Effect Effect { get; set; }
+
         public int SlideNumber { get; set; }
 
         public MsoShapeType Type { get; set; }
@@ -64,15 +66,5 @@ namespace PowerPointAddInVSTO.ViewModel
                 return error;
             }
         }
-
-        public Effect FindEffectById(int Id, IEnumerable<Effect> effects)
-        {
-            foreach (var effect in effects)
-            {
-                if (effect.Index == Id) return effect;
-            }
-            return null;
-        }
-
     }
 }

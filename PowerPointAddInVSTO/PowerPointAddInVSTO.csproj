@@ -200,6 +200,7 @@
       <DependentUpon>Timeline.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\EffectViewModel.cs" />
+    <Compile Include="ViewModel\SlideInfoViewModel.cs" />
     <Compile Include="ViewModel\SlidetrackViewModel.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
